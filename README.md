@@ -36,12 +36,43 @@ Un detalle que importa: si no hay ningún borrador pendiente y aun así responde
 el flujo **te avisa en vez de quedarse en silencio** (fue un bug real de la primera
 versión: la cadena de n8n moría callada).
 
-![Diagrama del flujo: Obsidian -> Agente OpenCode -> Webhook n8n -> Telegram -> LinkedIn](assets/diagrama-flujo.svg)
+## Cómo funciona
+
+Alto nivel: de la nota de estudio al perfil, con aprobación humana en el medio.
+
+![Diagrama del flujo: Obsidian -&gt; Agente OpenCode -&gt; Webhook n8n -&gt; Telegram -&gt; LinkedIn](assets/diagrama-flujo.svg)
+
+**OpenCode:** el orquestador solo coordina. Redacta el `linkedin-drafter` (que solo
+escribe en `linkedin-drafts/` y carga la skill obligatoria `linkedin-post-style`),
+verifica el `linkedin-fact-checker` (solo lectura, responde `VEREDICTO: OK` o una lista
+de frases sin respaldo), y recién con el veredicto OK envía el borrador al webhook con
+permiso `ask`. Nunca llama a la API de LinkedIn directamente.
+
+**n8n:** el webhook recibe el borrador, lo persiste como `pendiente` en una data table
+(cola de aprobación), y le manda a Telegram el texto con botones inline. El callback
+clasifica la interacción (`publicar | editar | descartar`), una sonda paralela revisa la
+cola y, si no hay pendiente, avisa en vez de morir en silencio; si hay pendiente, cada
+rama actúa. La edición reescribe con DeepSeek y vuelve a pedir aprobación; la
+publicación usa el nodo LinkedIn con `postAs: person` y `visibility: PUBLIC`.
+
+## Capturas en vivo
+
+_Pega aquí tus capturas reales del flujo en acción._
+
+> ⛳ **Slots editables.** Guarda tus capturas en `assets/screenshots/` y reemplaza o añade
+> líneas `<img>` abajo con el `src` correcto. El mockup de Telegram y el diagrama se
+> generan del propio repo (`assets/*.svg`) y se actualizan solos.
+
+| Captura | Qué muestra |
+| ------- | ----------- |
+| <img src="assets/screenshots/captura-post-publicado.png" alt="El post publicado en LinkedIn" width="420"/><br/><sub><i>El post publicado en LinkedIn</i></sub> | Resultado final: la publicación ya subida al perfil. |
+| <img src="assets/telegram-mockup.svg" alt="El borrador llega a tu Telegram con botones" width="420"/><br/><sub><i>Mockup: el borrador llega a tu Telegram</i></sub> | Cómo se ve la aprobación: texto + botones **✅ Publicar · ✏️ Editar · ❌ Descartar**. |
+| <img src="assets/screenshots/captura-flujo-telegram.png" alt="Flujo de n8n" width="420"/><br/><sub><i>Flujo de n8n</i></sub> | El workflow de n8n que decide la rama según tu elección. |
 
 ## Resultados reales
 
 - Probado de punta a punta contra una instancia n8n real y la API de LinkedIn: el
-  primer post del flujo se publicó en el perfil auténtico.
+  primer post del flujo se publicó en el perfil auténtico (ver captura de arriba).
 - El borrador se manda desde el agente (sin abrir el editor) y se aprueba/edita
   **desde el teléfono**.
 - Aprobación, edición y descarte registrados; cada interacción responde (incluido el
@@ -55,27 +86,6 @@ versión: la cadena de n8n moría callada).
 3. Tú respondes desde el móvil; el callback vuelve a n8n, que decide la rama.
 4. El flujo siempre responde: publicado, reescrito pendiente de re-aprobación, o aviso
    de "no hay pendientes".
-
-<img src="assets/screenshots/captura-resultado-telegram.png" alt="La aprobacion llega al movil por Telegram" width="520"/>
-
-## Capturas en vivo
-
-_Pega aquí las capturas reales de tu flujo en acción (la bandeja de Telegram, el post
-publicado en LinkedIn, la data table de pendientes, ...)._
-
-> ⛳ **Slots editables.** Guarda tus capturas en `assets/screenshots/` y reemplaza o añade
-> lineas `<img>` abajo con el `src` correcto. La primera imagen ya está apuntada a un
-> archivo de ejemplo listo para sobrescribir/renombrar.
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="assets/screenshots/captura-flujo-telegram.png" alt="Aprobación y edición desde Telegram" width="420"/>
-      <br/>
-      <sub><i>Flujo de n8n</i></sub>
-    </td>
-  </tr>
-</table>
 
 ## Estructura del repositorio
 
@@ -94,7 +104,8 @@ LinkedinAgentPost/
 ├── scripts/
 │   └── scan-secrets.sh            # escáner genérico de secretos (pre-push)
 ├── assets/
-│   ├── diagrama-flujo.svg
+│   ├── diagrama-flujo.svg         # diagrama general
+│   ├── telegram-mockup.svg        # mockup del mensaje con botones
 │   └── screenshots/               # tus capturas en vivo
 ├── opencode.json.example          # copia a opencode.json con TU token MCP
 ├── SECURITY.md
@@ -123,21 +134,6 @@ expuesto por HTTP, un **bot de Telegram**, una app de **LinkedIn** con permiso
    credenciales del bot, de LinkedIn y de DeepSeek a sus nodos.
 5. **Prueba.** Manda un borrador al webhook `POST /linkedin-draft-v2`
    (`{"texto": "...", "imageUrl": "..."}`) y aprueba desde Telegram.
-
-## Cómo funciona por dentro
-
-**OpenCode:** el orquestador solo coordina. Redacta el `linkedin-drafter` (que solo
-escribe en `linkedin-drafts/` y carga la skill obligatoria `linkedin-post-style`),
-verifica el `linkedin-fact-checker` (solo lectura, responde `VEREDICTO: OK` o una lista
-de frases sin respaldo), y recién con el veredicto OK envía el borrador al webhook con
-permiso `ask`. Nunca llama a la API de LinkedIn directamente.
-
-**n8n:** el webhook recibe el borrador, lo persiste como `pendiente` en una data table
-(cola de aprobación), y le manda a Telegram el texto con botones inline. El callback
-clasifica la interacción (`publicar | editar | descartar`), una sonda paralela revisa la
-cola y, si no hay pendiente, avisa en vez de morir en silencio; si hay pendiente, cada
-rama actúa. La edición reescribe con DeepSeek y vuelve a pedir aprobación; la
-publicación usa el nodo LinkedIn con `postAs: person` y `visibility: PUBLIC`.
 
 ## Seguridad
 

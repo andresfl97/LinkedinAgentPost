@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 700" width="520" height="700" font-family="Arial, Helvetica, sans-serif">
+  <!-- Fondo tipo Telegram movil -->
+  <rect width="520" height="700" fill="#e5ddd5"/>
+
+  <!-- Header de la app -->
+  <rect x="0" y="0" width="520" height="70" fill="#2a6eb0"/>
+  <circle cx="40" cy="35" r="22" fill="#ffffff" opacity="0.92"/>
+  <text x="40" y="41" text-anchor="middle" font-size="15" font-weight="bold" fill="#2a6eb0">K</text>
+  <text x="72" y="32" font-size="15" font-weight="bold" fill="#ffffff">KiraBot</text>
+  <text x="72" y="50" font-size="11" fill="#cfe3f7">n8n · bot de aprobación</text>
+
+  <!-- Titulo del bloque -->
+  <text x="260" y="105" text-anchor="middle" font-size="13" font-weight="bold" fill="#5b6b7a">📥 Nuevo borrador de LinkedIn</text>
+
+  <!-- Burbuja de texto (mensaje del bot) -->
+  <rect x="70" y="125" width="420" height="300" rx="16" fill="#ffffff"/>
+  <path d="M 85 425 L 100 445 L 82 425 Z" fill="#ffffff"/>
+  <text x="95" y="152" font-size="12" fill="#35424a">
+    <tspan x="95" dy="0">📚 Estudiar cuesta, y publicar lo que</tspan>
+    <tspan x="95" dy="18">aprendiste… también. Tenía la nota en</tspan>
+    <tspan x="95" dy="18">Obsidian con el avance real, pero el post</tspan>
+    <tspan x="95" dy="18">se quedaba en mi cabeza 🤯</tspan>
+    <tspan x="95" dy="24">Así que armé un pipeline:</tspan>
+    <tspan x="95" dy="20">🗒️ nota → 🤖 borrador con mi estilo</tspan>
+    <tspan x="95" dy="18">🔍 revisión frase por frase, sin inventos</tspan>
+    <tspan x="95" dy="18">📱 y ahora mismo llega aquí 👇</tspan>
+    <tspan x="95" dy="24" fill="#8a9aa6">· · ·
+Enviado desde tu agente · n8n</tspan>
+  </text>
+
+  <!-- Botones inline de Telegram -->
+  <text x="260" y="470" text-anchor="middle" font-size="12" fill="#5b6b7a">Elige una acción ⤵</text>
+
+  <rect x="80" y="492" width="130" height="46" rx="23" fill="#4a90d9"/>
+  <text x="145" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">✅ Publicar</text>
+
+  <rect x="220" y="492" width="130" height="46" rx="23" fill="#4a90d9"/>
+  <text x="285" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">✏️ Editar</text>
+
+  <rect x="360" y="492" width="130" height="46" rx="23" fill="#d44d4d"/>
+  <text x="425" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">❌ Descartar</text>
+
+  <!-- Pie -->
+  <rect x="70" y="575" width="420" height="80" rx="14" fill="#ffffff" opacity="0.9"/>
+  <text x="95" y="603" font-size="12" font-weight="bold" fill="#2a6eb0">¿Qué pasa después?</text>
+  <text x="95" y="622" font-size="11" fill="#35424a">✅ n8n publica en tu perfil · ✏️ la IA reescribe y</text>
+  <text x="95" y="639" font-size="11" fill="#35424a">vuelve a preguntar · ❌ no publica nada.</text>
+
+  <text x="260" y="685" text-anchor="middle" font-size="10" fill="#8a9aa6">Mockup ilustrativo · LibreLinkedinAgentPost</text>
+</svg>
