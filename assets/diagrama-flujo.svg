@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 430" width="1080" height="430" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a7a7a"/>
+    </marker>
+  </defs>
+  <rect width="1080" height="430" fill="#ffffff"/>
+
+  <text x="20" y="34" font-size="18" font-weight="bold" fill="#222">¿Cómo se publica este post?</text>
+  <text x="20" y="54" font-size="12" fill="#666">De la nota de estudio al perfil de LinkedIn, con aprobación humana en el medio.</text>
+
+  <!-- 1. Notas -->
+  <rect x="20" y="155" width="160" height="90" rx="12" fill="#e8f1fb" stroke="#4a86c8" stroke-width="2"/>
+  <text x="100" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#2b4b78">Notas de estudio</text>
+  <text x="100" y="208" text-anchor="middle" font-size="11" fill="#3a5a86">Obsidian: SQL/Python</text>
+  <text x="100" y="224" text-anchor="middle" font-size="11" fill="#3a5a86">y proyecto Kira</text>
+
+  <!-- 2. Agente -->
+  <rect x="225" y="155" width="170" height="90" rx="12" fill="#eaf6ec" stroke="#5cae6b" stroke-width="2"/>
+  <text x="310" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e6338">Agente OpenCode</text>
+  <text x="310" y="208" text-anchor="middle" font-size="11" fill="#3c7a46">borrador al estilo del</text>
+  <text x="310" y="224" text-anchor="middle" font-size="11" fill="#3c7a46">perfil + anti-alucinación</text>
+
+  <!-- 3. Webhook n8n -->
+  <rect x="440" y="155" width="170" height="90" rx="12" fill="#fdf3e3" stroke="#e0a94a" stroke-width="2"/>
+  <text x="525" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#8a6416">Webhook n8n</text>
+  <text x="525" y="208" text-anchor="middle" font-size="11" fill="#b07f22">guarda el borrador</text>
+  <text x="525" y="224" text-anchor="middle" font-size="11" fill="#b07f22">y lo envía a Telegram</text>
+
+  <!-- 4. Telegram (decision) -->
+  <polygon points="760,140 848,200 760,260 672,200" fill="#e9eff7" stroke="#3374c8" stroke-width="2"/>
+  <text x="760" y="190" text-anchor="middle" font-size="13" font-weight="bold" fill="#21538f">Telegram</text>
+  <text x="760" y="207" text-anchor="middle" font-size="11" fill="#3374c8">✅ Publicar</text>
+  <text x="760" y="222" text-anchor="middle" font-size="11" fill="#3374c8">✏️ Editar · ❌ Descartar</text>
+
+  <!-- 5. DeepSeek -->
+  <rect x="905" y="55" width="150" height="66" rx="12" fill="#f7e9f2" stroke="#c85a9a" stroke-width="2"/>
+  <text x="980" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#8a2d66">DeepSeek</text>
+  <text x="980" y="104" text-anchor="middle" font-size="11" fill="#b0478a">solo si pides editar</text>
+
+  <!-- 6. LinkedIn -->
+  <rect x="900" y="305" width="160" height="66" rx="12" fill="#e8fbfb" stroke="#2f9aa0" stroke-width="2"/>
+  <text x="980" y="336" text-anchor="middle" font-size="13" font-weight="bold" fill="#1c6469">LinkedIn (API)</text>
+  <text x="980" y="354" text-anchor="middle" font-size="11" fill="#2f8288">publica en tu perfil</text>
+
+  <!-- 7. Fin -->
+  <ellipse cx="1050" cy="120" rx="58" ry="30" fill="#d5f5e3" stroke="#2ecc71" stroke-width="2"/>
+  <text x="1050" y="116" text-anchor="middle" font-size="12" font-weight="bold" fill="#1b7a44">Post publicado</text>
+  <text x="1050" y="132" text-anchor="middle" font-size="10" fill="#2a9a5a">desde tu teléfono</text>
+
+  <!-- Flechas: linea principal -->
+  <line x1="180" y1="200" x2="223" y2="200" stroke="#7a7a7a" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="395" y1="200" x2="438" y2="200" stroke="#7a7a7a" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="610" y1="200" x2="670" y2="200" stroke="#7a7a7a" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- editar: Telegram -> DeepSeek y vuelta -->
+  <path d="M 835 160 C 870 120, 890 110, 902 96" fill="none" stroke="#c85a9a" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="862" y="120" font-size="11" fill="#c85a9a">✏️ editar</text>
+  <path d="M 912 122 C 900 138, 862 152, 842 162" fill="none" stroke="#c85a9a" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="852" y="150" font-size="10" fill="#c85a9a">vuelve a preguntar</text>
+
+  <!-- publicar: Telegram -> LinkedIn -->
+  <path d="M 795 243 C 815 270, 850 288, 897 296" fill="none" stroke="#2f9aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="815" y="278" font-size="11" fill="#2f8288">✅ publicar</text>
+
+  <!-- Descartar: flecha corta hacia abajo -->
+  <line x1="700" y1="260" x2="690" y2="295" stroke="#7a7a7a" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="668" y="316" font-size="11" fill="#7a7a7a">❌ descartar: no publica nada</text>
+
+  <!-- LinkedIn -> Post publicado -->
+  <line x1="1060" y1="305" x2="1052" y2="268" stroke="#2ecc71" stroke-width="2" marker-end="url(#arr)"/>
+</svg>

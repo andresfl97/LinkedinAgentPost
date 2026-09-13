@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "n8n-mcp-kira-agent": {
+      "type": "remote",
+      "url": "https://TU-N8N.dominio/mcp-server/http",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer PON_AQUI_TU_TOKEN"
+      },
+      "oauth": false
+    }
+  }
+}

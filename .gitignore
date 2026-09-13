@@ -1,0 +1,43 @@
+# ------------------------------------------------------------------
+# LinkedinAgentPost - guardarrailes de seguridad
+# Lo que vive aqui NO puede subirse. Configuracion local / secretos.
+# ------------------------------------------------------------------
+
+# Config local de OpenCode (contiene tokens de MCP, credenciales)
+opencode.json
+opencode.jsonc
+*.opencode.json
+*.opencode.jsonc
+
+# Secretos y claves
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Logs y rastros
+*.log
+
+# Copias/dumps binarios (la plantilla esta en workflows/, el zip no)
+*.zip
+opencode-linkedin-kit/
+
+# Borradores personales (los drafts de posts son del usuario, no del repo)
+linkedin-drafts/
+
+# Node (dependencias del plugin; se regeneran con npm i)
+node_modules/
+package.json
+package-lock.json
+bun.lock
+
+# Editor / SO
+.DS_Store
+Thumbs.db
+
+# Export de workflows con IDs/credenciales reales (usar la plantilla)
+workflows/*.real.json
