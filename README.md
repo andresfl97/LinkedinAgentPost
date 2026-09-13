@@ -28,9 +28,11 @@ Este proyecto automatiza lo repetitivo y te deja **a ti** la única decisión qu
    la skill `linkedin-post-style` (reglas de tono estrictas), y el subagente
    `linkedin-fact-checker` compara el borrador contra la nota **frase por frase**:
    cualquier dato sin respaldo textual se marca, nunca se inventa.
-3. El borrador aterriza en tu Telegram con tres botones.
-4. **✅ Publicar** → n8n lo publica en tu perfil. **✏️ Editar** → DeepSeek lo reescribe a
-   tu pedido y vuelve a preguntar. **❌ Descartar** → no publica nada.
+3. El borrador aterriza en tu Telegram con dos botones y la invitación a escribir:
+   **✅ Publicar · ❌ Descartar · 💬 escribe cualquier cambio**.
+4. **✅ Publicar** → n8n lo publica en tu perfil. **Escribir en el chat** → DeepSeek lo
+   reescribe a tu pedido y vuelve a pedir aprobación (misma tarjeta, actualizada).
+   **❌ Descartar** → no publica nada.
 
 Un detalle que importa: si no hay ningún borrador pendiente y aun así respondes,
 el flujo **te avisa en vez de quedarse en silencio** (fue un bug real de la primera
@@ -49,11 +51,13 @@ de frases sin respaldo), y recién con el veredicto OK envía el borrador al web
 permiso `ask`. Nunca llama a la API de LinkedIn directamente.
 
 **n8n:** el webhook recibe el borrador, lo persiste como `pendiente` en una data table
-(cola de aprobación), y le manda a Telegram el texto con botones inline. El callback
-clasifica la interacción (`publicar | editar | descartar`), una sonda paralela revisa la
-cola y, si no hay pendiente, avisa en vez de morir en silencio; si hay pendiente, cada
-rama actúa. La edición reescribe con DeepSeek y vuelve a pedir aprobación; la
-publicación usa el nodo LinkedIn con `postAs: person` y `visibility: PUBLIC`.
+(cola de aprobación), y le manda a Telegram el texto con botones ✅/❌ e indicación de que
+puede **escribir** para pedir una edición. El `telegramTrigger` captura botones y mensajes
+de texto: clasifica la interacción (`publicar | editar | descartar`), una sonda paralela
+revisa la cola y, si no hay pendiente, avisa en vez de morir en silencio; si hay
+pendiente, cada rama actúa. La edición reescribe con DeepSeek, guarda la nueva versión en
+la cola y vuelve a pedir aprobación; la publicación usa el nodo LinkedIn con
+`postAs: person` y `visibility: PUBLIC`.
 
 ## Capturas en vivo
 
@@ -66,7 +70,7 @@ _Pega aquí tus capturas reales del flujo en acción._
 | Captura | Qué muestra |
 | ------- | ----------- |
 | <img src="assets/screenshots/captura-post-publicado.png" alt="El post publicado en LinkedIn" width="420"/><br/><sub><i>El post publicado en LinkedIn</i></sub> | Resultado final: la publicación ya subida al perfil. |
-| <img src="assets/telegram-mockup.svg" alt="El borrador llega a tu Telegram con botones" width="420"/><br/><sub><i>Mockup: el borrador llega a tu Telegram</i></sub> | Cómo se ve la aprobación: texto + botones **✅ Publicar · ✏️ Editar · ❌ Descartar**. |
+| <img src="assets/telegram-mockup.svg" alt="El borrador llega a tu Telegram con botones" width="420"/><br/><sub><i>Mockup: el borrador llega a tu Telegram</i></sub> | Cómo se ve la aprobación: texto + botones **✅ Publicar · ❌ Descartar** y aviso de que puedes escribir para editar. |
 | <img src="assets/screenshots/captura-flujo-telegram.png" alt="Flujo de n8n" width="420"/><br/><sub><i>Flujo de n8n</i></sub> | El workflow de n8n que decide la rama según tu elección. |
 
 ## Resultados reales
@@ -82,8 +86,9 @@ _Pega aquí tus capturas reales del flujo en acción._
 
 1. Tu agente manda el borrador al webhook de n8n (`POST /linkedin-draft-v2`).
 2. n8n lo guarda en la data table como `pendiente` y el bot de Telegram te lo envía
-   con los botones **✅ Publicar · ✏️ Editar · ❌ Descartar**.
-3. Tú respondes desde el móvil; el callback vuelve a n8n, que decide la rama.
+   con los botones **✅ Publicar · ❌ Descartar** y la invitación a escribir un cambio.
+3. Tú respondes desde el móvil: pulsas un botón o **escribes** el cambio; el
+   `telegramTrigger` lo captura y n8n decide la rama.
 4. El flujo siempre responde: publicado, reescrito pendiente de re-aprobación, o aviso
    de "no hay pendientes".
 
@@ -128,12 +133,14 @@ expuesto por HTTP, un **bot de Telegram**, una app de **LinkedIn** con permiso
    ```
 3. **MCP de n8n para OpenCode.** Crea tu `opencode.json` copiando
    `opencode.json.example` y pega el token de tu instancia.
-4. **Workflow de n8n.** Crea la data table (columnas `texto`, `imagen_url`, `estado`,
-   `chat_id`) y genera el workflow desde `workflows/linkedin-post-v2.template.ts`
-   (n8n → Workflow SDK / importar). Rellena todos los `YOUR_*` y conecta las
-   credenciales del bot, de LinkedIn y de DeepSeek a sus nodos.
+4. **Workflow de n8n.** Crea la data table (columnas `draftText`, `seccion`, `fecha`,
+   `sourceNote`, `veredicto`, `imageUrl`, `chatId`, `estado`) y genera el workflow desde
+   `workflows/linkedin-post-v2.template.ts` (n8n → Workflow SDK / importar). Rellena
+   todos los `YOUR_*` y conecta las credenciales del bot, de LinkedIn y de DeepSeek a
+   sus nodos.
 5. **Prueba.** Manda un borrador al webhook `POST /linkedin-draft-v2`
-   (`{"texto": "...", "imageUrl": "..."}`) y aprueba desde Telegram.
+   (`{"draftText": "...", "seccion": "kira", "fecha": "2026-09-13", "chatId": "..."}`)
+   y aprueba desde Telegram.
 
 ## Seguridad
 

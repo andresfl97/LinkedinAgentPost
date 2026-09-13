@@ -21,10 +21,18 @@ workflow('LinkedIn Post con Edicion por Telegram')
   // ----------------------------------------------------------
   // 1) RECIBIR BORRADOR  (POST /linkedin-draft-v2)
   //    Cuerpo esperado (JSON):
-  //    { "texto": "post...", "imageUrl": "https://...", "chat_id": "..." }
+  //    {
+  //      "draftText": "texto del post...",
+  //      "sourceNote": "ruta de la nota fuente en Obsidian",
+  //      "seccion": "kira | andres",
+  //      "fecha": "YYYY-MM-DD",
+  //      "veredicto": "OK | REVISAR",
+  //      "imageUrl": "https://... (opcional)",
+  //      "chatId": "tu_chat_id_de_telegram"
+  //    }
   // ----------------------------------------------------------
   .trigger(
-    node('Recibir Borrador', 'n8n-nodes-base.webhook')
+    node('Recibir Borrador de OpenCode', 'n8n-nodes-base.webhook')
       .setParameter('httpMethod', 'POST')
       .setParameter('path', 'linkedin-draft-v2')
       .setParameter('responseMode', 'onReceived')
@@ -37,27 +45,45 @@ workflow('LinkedIn Post con Edicion por Telegram')
       .setParameter('assignments', {
         assignments: [
           {
-            id: '_texto',
-            name: 'texto',
-            value: "={{ $json.body.texto ?? $json.body.content ?? '' }}",
+            id: '_draftText',
+            name: 'draftText',
+            value: "={{ $json.body.draftText ?? '' }}",
+            type: 'string',
+          },
+          {
+            id: '_sourceNote',
+            name: 'sourceNote',
+            value: "={{ $json.body.sourceNote ?? 'Sin nota fuente' }}",
+            type: 'string',
+          },
+          {
+            id: '_seccion',
+            name: 'seccion',
+            value: "={{ $json.body.seccion ?? '' }}",
+            type: 'string',
+          },
+          {
+            id: '_fecha',
+            name: 'fecha',
+            value: "={{ $json.body.fecha ?? '' }}",
+            type: 'string',
+          },
+          {
+            id: '_veredicto',
+            name: 'veredicto',
+            value: "={{ $json.body.veredicto ?? 'OK' }}",
             type: 'string',
           },
           {
             id: '_imageUrl',
             name: 'imageUrl',
-            value: "={{ $json.body.imageUrl ?? $json.body.image_url ?? '' }}",
+            value: "={{ $json.body.imageUrl ?? '' }}",
             type: 'string',
           },
           {
-            id: '_chat_id',
-            name: 'chat_id',
-            value: "={{ $json.body.chat_id ?? $json.body.chatId ?? 'YOUR_TELEGRAM_CHAT_ID' }}",
-            type: 'string',
-          },
-          {
-            id: '_id',
-            name: 'id',
-            value: "={{ $json.body.id ?? '' }}",
+            id: '_chatId',
+            name: 'chatId',
+            value: "={{ $json.body.chatId ?? 'YOUR_TELEGRAM_CHAT_ID' }}",
             type: 'string',
           },
         ],
@@ -66,114 +92,99 @@ workflow('LinkedIn Post con Edicion por Telegram')
 
   // Guarda el borrador como "pendiente" en la data table.
   .add(
-    node('Guardar en Tabla', 'n8n-nodes-base.dataTable')
+    node('Guardar Borrador Pendiente', 'n8n-nodes-base.dataTable')
       .setParameter('resource', 'dataTable')
       .setParameter('operation', 'create')
-      .setParameter('tableId', { mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
       .setParameter('columns', [
-        { name: 'texto', type: 'string' },
-        { name: 'imagen_url', type: 'string' },
+        { name: 'draftText', type: 'string' },
+        { name: 'seccion', type: 'string' },
+        { name: 'fecha', type: 'string' },
+        { name: 'sourceNote', type: 'string' },
+        { name: 'veredicto', type: 'string' },
+        { name: 'imageUrl', type: 'string' },
+        { name: 'chatId', type: 'string' },
         { name: 'estado', type: 'string' },
-        { name: 'chat_id', type: 'string' },
       ])
       .setParameter('data', [
-        {
-          field: 'texto',
-          value: "={{ $('Normalizar Datos del Borrador').item.json.texto }}",
-        },
-        {
-          field: 'imagen_url',
-          value: "={{ $('Normalizar Datos del Borrador').item.json.imageUrl }}",
-        },
+        { field: 'draftText', value: "={{ $('Normalizar Datos del Borrador').item.json.draftText }}" },
+        { field: 'seccion', value: "={{ $('Normalizar Datos del Borrador').item.json.seccion }}" },
+        { field: 'fecha', value: "={{ $('Normalizar Datos del Borrador').item.json.fecha }}" },
+        { field: 'sourceNote', value: "={{ $('Normalizar Datos del Borrador').item.json.sourceNote }}" },
+        { field: 'veredicto', value: "={{ $('Normalizar Datos del Borrador').item.json.veredicto }}" },
+        { field: 'imageUrl', value: "={{ $('Normalizar Datos del Borrador').item.json.imageUrl }}" },
+        { field: 'chatId', value: "={{ $('Normalizar Datos del Borrador').item.json.chatId }}" },
         { field: 'estado', value: 'pendiente' },
-        {
-          field: 'chat_id',
-          value: "={{ $('Normalizar Datos del Borrador').item.json.chat_id }}",
-        },
       ])
   )
 
-  // Mensaje breve que se envia junto a los botones.
-  .add(
-    node('Preparar Aviso Recibido', 'n8n-nodes-base.set')
-      .setParameter('keepOnlySet', true)
-      .setParameter('assignments', {
-        assignments: [
-          {
-            id: '_aviso',
-            name: 'texto',
-            value:
-              "📥 Borrador recibido para aprobación.\n\n{{ $('Normalizar Datos del Borrador').item.json.texto }}",
-            type: 'string',
-          },
-        ],
-      })
-  )
-
-  // Envia el borrador a Telegram con botones inline.
+  // Envia el borrador a Telegram con 2 botones + indicacion de chat.
   // Necesita tu credencial YOUR_TELEGRAM_BOT_CREDENTIAL conectada a TODOS los
-  // nodos Telegram del flujo (Enviar Borrador, Aviso Sin Pendiente, Enviar
-  // Pregunta Edicion, Enviar Aviso Edicion, Enviar Aviso Publicado, Aviso Descartado).
+  // nodos Telegram del flujo.
   .add(
     node('Enviar Borrador a Telegram', 'n8n-nodes-base.telegram')
       .setParameter('resource', 'message')
       .setParameter('operation', 'sendMessage')
-      .setParameter('chatId', "={{ $('Normalizar Datos del Borrador').item.json.chat_id }}")
-      .setParameter('text', "={{ $('Preparar Aviso Recibido').item.json.texto }}")
+      .setParameter('chatId', "={{ $('Normalizar Datos del Borrador').item.json.chatId }}")
+      .setParameter('text', "={{ '📝 Borrador para LinkedIn\\nSección: ' + $('Normalizar Datos del Borrador').item.json.seccion + ' · Fecha: ' + $('Normalizar Datos del Borrador').item.json.fecha + '\\n\\n' + $('Normalizar Datos del Borrador').item.json.draftText + '\\n\\n💬 Escribe en este chat un cambio (ej: \"se más breve\", \"cambia el título\") o pulsa un botón.' }}")
       .setParameter('additionalFields', {
         replyMarkup: JSON.stringify({
           inline_keyboard: [
             [
               { text: '✅ Publicar', callback_data: 'publicar' },
-              { text: '✏️ Editar', callback_data: 'editar' },
               { text: '❌ Descartar', callback_data: 'descartar' },
             ],
           ],
+          link_preview_options: { is_disabled: true },
         }),
       })
   )
 
-  // Espera la respuesta del usuario (callback de los botones o mensaje libre).
-  // POST /linkedin-callback-v2 con el payload del update de Telegram.
+  // ----------------------------------------------------------
+  // 2) ESCUCHAR RESPUESTA DEL USUARIO
+  //    El usuario responde desde Telegram: ya sea un callback de boton
+  //    o un mensaje de texto libre (para pedir ediciones).
+  //    Se usa telegramTrigger (TRIGGER PARALELO, siempre escuchando).
+  // ----------------------------------------------------------
   .add(
-    node('Esperar Callback', 'n8n-nodes-base.webhook')
-      .setParameter('httpMethod', 'POST')
-      .setParameter('path', 'linkedin-callback-v2')
-      .setParameter('responseMode', 'onReceived')
-      .setParameter('respondWith', 'noData')
+    node('Escuchar Telegram', 'n8n-nodes-base.telegramTrigger')
+      .setParameter('updates', ['message', 'callback_query'])
   )
 
-  // Clasifica el update: boton (callback_query) o mensaje de texto libre.
+  // Clasifica la interaccion: publicar | descartar | editar (texto libre).
   .add(
-    node('Clasificar Interaccion', 'n8n-nodes-base.if')
-      .setParameter('conditions', {
-        options: {
-          caseSensitive: true,
-          typeValidation: 'strict',
-        },
-        conditions: [
-          {
-            leftValue: "={{ $json.callback_query?.data ?? '' }}",
-            rightValue: '',
-            operator: 'notEqual',
-          },
+    node('Clasificar Interaccion', 'n8n-nodes-base.code')
+      .setParameter('jsCode', `const item = $input.first().json;
+const callback = item.callback_query?.data ?? '';
+const text = item.message?.text ?? '';
+let tipo;
+if (callback === 'publicar') tipo = 'publicar';
+else if (callback === 'descartar') tipo = 'descartar';
+else if (text) tipo = 'editar';
+else tipo = 'sinPendiente';
+return [{ json: { tipo, callback, text } }];`)
+  )
+
+  // Busca el borrador pendiente mas reciente en la tabla.
+  .add(
+    node('Buscar Pendiente', 'n8n-nodes-base.dataTable')
+      .setParameter('resource', 'dataTable')
+      .setParameter('operation', 'get')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('filters', {
+        filters: [
+          { columnName: 'estado', condition: 'eq', value: 'pendiente' },
         ],
-        combinator: 'and',
+        type: 'and',
       })
   )
 
-  // Exporta un campo "tipo" limpio: publicar | editar | descartar | texto.
+  // Si no hay pendiente, fuerza tipo = sinPendiente.
   .add(
-    node('Estructurar Interaccion', 'n8n-nodes-base.code')
-      .setParameter('jsCode', `// Se ejecuta una vez por rama del IF.
-const callback = $input.first().json.callback_query?.data ?? '';
-const text = $input.first().json.message?.text ?? '';
-let tipo;
-if (callback === 'publicar') tipo = 'publicar';
-else if (callback === 'editar' || text) tipo = 'editar';
-else if (callback === 'descartar') tipo = 'descartar';
-else tipo = 'sinPendiente';
-return [{ json: { tipo, callback, text } }];`)
+    node('Insertar Bandera', 'n8n-nodes-base.code')
+      .setParameter('jsCode', `const original = $input.first().json;
+const sinPendientes = $('Buscar Pendiente').all().length === 0;
+return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.tipo } }];`)
   )
 
   // Rutea segun el tipo.
@@ -182,8 +193,8 @@ return [{ json: { tipo, callback, text } }];`)
       .setParameter('rules', {
         values: [
           { name: 'publicar' },
-          { name: 'editar' },
           { name: 'descartar' },
+          { name: 'editar' },
           { name: 'sinPendiente' },
         ],
         output: 'rules',
@@ -191,36 +202,8 @@ return [{ json: { tipo, callback, text } }];`)
   )
 
   // ----------------------------------------------------------
-  // 2) CERO PENDIENTES  (respaldo del silencio)
-  //    Sondea la tabla: si no hay ningun pendiente avisa y NA NADA.
+  // 3) CERO PENDIENTES  (respaldo del silencio)
   // ----------------------------------------------------------
-  .add(
-    node('Buscar Pendiente', 'n8n-nodes-base.dataTable')
-      .setParameter('resource', 'dataTable')
-      .setParameter('operation', 'get')
-      .setParameter('tableId', { mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
-      .setParameter('filters', {
-        filters: [
-          {
-            columnName: 'estado',
-            condition: 'eq',
-            value: 'pendiente',
-          },
-        ],
-        type: 'and',
-      })
-  )
-
-  // Si la sonda devuelve 0 filas re-etiqueta el tipo a "sinPendiente";
-  // si hay filas, deja pasar el item original (se dispara desde el item de
-  // "Estructurar Interaccion" y lee la sonda por referencia).
-  .add(
-    node('Insertar Bandera', 'n8n-nodes-base.code')
-      .setParameter('jsCode', `const original = $input.first().json;
-const sinPendientes = $('Buscar Pendiente').all().length === 0;
-return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.tipo } }];`)
-  )
-
   .add(
     node('Aviso Sin Pendiente', 'n8n-nodes-base.telegram')
       .setParameter('resource', 'message')
@@ -230,38 +213,21 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
   )
 
   // ----------------------------------------------------------
-  // 3) RAMA EDICION: reescribe con IA y vuelve a pedir aprobacion
+  // 4) RAMA EDICION: reescribe con IA y vuelve a pedir aprobacion
   // ----------------------------------------------------------
+
+  // Busca el borrador pendiente para pasarselo a DeepSeek.
   .add(
-    node('Preparar Pregunta Edicion', 'n8n-nodes-base.set')
-      .setParameter('keepOnlySet', true)
-      .setParameter('assignments', {
-        assignments: [
-          {
-            id: '_pregunta',
-            name: 'texto',
-            value:
-              "✏️ Escribe la nueva version (o instrucciones) y la reescribo con IA. \"hecho\" para publicar igual, \"cancelar\" para salir.",
-            type: 'string',
-          },
+    node('Buscar Pendiente Editar', 'n8n-nodes-base.dataTable')
+      .setParameter('resource', 'dataTable')
+      .setParameter('operation', 'get')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('filters', {
+        filters: [
+          { columnName: 'estado', condition: 'eq', value: 'pendiente' },
         ],
+        type: 'and',
       })
-  )
-
-  .add(
-    node('Enviar Pregunta Edicion', 'n8n-nodes-base.telegram')
-      .setParameter('resource', 'message')
-      .setParameter('operation', 'sendMessage')
-      .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
-      .setParameter('text', "={{ $('Preparar Pregunta Edicion').item.json.texto }}")
-  )
-
-  .add(
-    node('Esperar Respuesta Edicion', 'n8n-nodes-base.webhook')
-      .setParameter('httpMethod', 'POST')
-      .setParameter('path', 'linkedin-edit-v2')
-      .setParameter('responseMode', 'onReceived')
-      .setParameter('respondWith', 'noData')
   )
 
   .add(
@@ -273,7 +239,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
             id: '_prompt',
             name: 'prompt',
             value:
-              "={{ 'Reescribe este borrador de LinkedIn siguiendo el pedido del usuario. Muy breve.\\n\\nBORRADOR: ' + $('Enviar Borrador a Telegram').item.json.texto + '\\n\\nPEDIDO: ' + $json.message.text }}",
+              "={{ 'Reescribe este borrador de LinkedIn siguiendo el pedido del usuario. Muy breve.\\n\\nBORRADOR ACTUAL:\\n' + $('Buscar Pendiente Editar').item.json.draftText + '\\n\\nPEDIDO DEL USUARIO: ' + $json.text }}",
             type: 'string',
           },
         ],
@@ -281,7 +247,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
   )
 
   .add(
-    node('Reescribir con IA', 'n8n-nodes-base.deepSeek')
+    node('DeepSeek Model', 'n8n-nodes-base.deepSeek')
       .setParameter('resource', 'chat')
       .setParameter('operation', 'message')
       .setParameter('model', 'deepseek-chat')
@@ -289,73 +255,84 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('text', "={{ $('Preparar Prompt Edicion').item.json.prompt }}")
   )
 
+  // Guarda la version reescrita en la tabla y reenvia a Telegram.
   .add(
-    node('Preparar Nueva Version', 'n8n-nodes-base.set')
-      .setParameter('keepOnlySet', true)
-      .setParameter('assignments', {
-        assignments: [
-          {
-            id: '_nueva',
-            name: 'texto',
-            // La IA devuelve choices[0].message.content
-            value: "={{ $('Reescribir con IA').item.json.choices[0].message.content }}",
-            type: 'string',
-          },
+    node('Guardar Borrador Editado', 'n8n-nodes-base.dataTable')
+      .setParameter('resource', 'dataTable')
+      .setParameter('operation', 'update')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('matchType', 'allConditions')
+      .setParameter('filters', {
+        conditions: [
+          { keyName: 'estado', condition: 'eq', keyValue: 'pendiente' },
         ],
+      })
+      .setParameter('columns', {
+        mappingMode: 'defineBelow',
+        value: {
+          draftText: "={{ $('DeepSeek Model').item.json.choices[0].message.content }}",
+        },
       })
   )
 
   .add(
-    node('Actualizar Pendiente', 'n8n-nodes-base.dataTable')
+    node('Reenviar Borrador Mejorado', 'n8n-nodes-base.telegram')
+      .setParameter('resource', 'message')
+      .setParameter('operation', 'sendMessage')
+      .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
+      .setParameter('text', "={{ '📝 Borrador para LinkedIn (editado)\\n\\n' + $('Guardar Borrador Editado').item.json.draftText + '\\n\\n💬 Escribe otro cambio o pulsa un botón.' }}")
+      .setParameter('additionalFields', {
+        replyMarkup: JSON.stringify({
+          inline_keyboard: [
+            [
+              { text: '✅ Publicar', callback_data: 'publicar' },
+              { text: '❌ Descartar', callback_data: 'descartar' },
+            ],
+          ],
+          link_preview_options: { is_disabled: true },
+        }),
+      })
+  )
+
+  // ----------------------------------------------------------
+  // 5) RAMA PUBLICAR: va directo a LinkedIn
+  // ----------------------------------------------------------
+  .add(
+    node('Buscar Pendiente Publicar', 'n8n-nodes-base.dataTable')
       .setParameter('resource', 'dataTable')
-      .setParameter('operation', 'update')
-      .setParameter('tableId', { mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
-      .setParameter('filter', {
+      .setParameter('operation', 'get')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('filters', {
         filters: [
           { columnName: 'estado', condition: 'eq', value: 'pendiente' },
         ],
         type: 'and',
       })
-      .setParameter('data', [
-        { field: 'texto', value: "={{ $('Preparar Nueva Version').item.json.texto }}" },
-      ])
   )
 
   .add(
-    node('Aviso Version Nueva', 'n8n-nodes-base.telegram')
+    node('Notificar Publicado', 'n8n-nodes-base.telegram')
       .setParameter('resource', 'message')
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
-      .setParameter('text', "={{ $('Preparar Nueva Version').item.json.texto }}")
+      .setParameter('text', "={{ '✅ Publicado en tu perfil de LinkedIn.\\n\\n' + $('Buscar Pendiente Publicar').item.json.draftText }}")
   )
 
-  // Lazo de vuelta al mensaje con botones.
-  .bridge('Aviso Version Nueva').to('Enviar Borrador a Telegram')
-
-  // ----------------------------------------------------------
-  // 4) RAMA PUBLICAR: va directo a LinkedIn
-  // ----------------------------------------------------------
   .add(
-    node('Preparar Aviso Publicado', 'n8n-nodes-base.set')
-      .setParameter('keepOnlySet', true)
-      .setParameter('assignments', {
-        assignments: [
-          {
-            id: '_aviso',
-            name: 'texto',
-            value: "✅ Publicado en tu perfil de LinkedIn.\n\n{{ $('Preparar Aviso Recibido').item.json.texto }}",
-            type: 'string',
-          },
+    node('Marcar Publicado', 'n8n-nodes-base.dataTable')
+      .setParameter('resource', 'dataTable')
+      .setParameter('operation', 'update')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('matchType', 'allConditions')
+      .setParameter('filters', {
+        conditions: [
+          { keyName: 'estado', condition: 'eq', keyValue: 'pendiente' },
         ],
       })
-  )
-
-  .add(
-    node('Enviar Aviso Publicado', 'n8n-nodes-base.telegram')
-      .setParameter('resource', 'message')
-      .setParameter('operation', 'sendMessage')
-      .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
-      .setParameter('text', "={{ $('Preparar Aviso Publicado').item.json.texto }}")
+      .setParameter('columns', {
+        mappingMode: 'defineBelow',
+        value: { estado: 'publicado' },
+      })
   )
 
   // Publica como actualizacion del perfil (person). Necesita tu credencial
@@ -367,60 +344,77 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('postAs', 'person')
       .setParameter('visibility', 'PUBLIC')
       .setParameter('person', 'YOUR_LINKEDIN_PERSON_URN')
-      .setParameter('text', "={{ $('Preparar Aviso Publicado').item.json.texto }}")
+      .setParameter('text', "={{ $('Buscar Pendiente Publicar').item.json.draftText }}")
   )
 
   // ----------------------------------------------------------
-  // 5) RAMA DESCARTAR
+  // 6) RAMA DESCARTAR
   // ----------------------------------------------------------
   .add(
-    node('Marcar Descartado', 'n8n-nodes-base.dataTable')
+    node('Buscar Pendiente Descartar', 'n8n-nodes-base.dataTable')
       .setParameter('resource', 'dataTable')
-      .setParameter('operation', 'update')
-      .setParameter('tableId', { mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
-      .setParameter('filter', {
+      .setParameter('operation', 'get')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('filters', {
         filters: [
           { columnName: 'estado', condition: 'eq', value: 'pendiente' },
         ],
         type: 'and',
       })
-      .setParameter('data', [{ field: 'estado', value: 'descartado' }])
   )
 
   .add(
-    node('Aviso Descartado', 'n8n-nodes-base.telegram')
+    node('Notificar Descartado', 'n8n-nodes-base.telegram')
       .setParameter('resource', 'message')
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
       .setParameter('text', '🗑️ Borrador descartado. No se publicó.')
   )
 
+  .add(
+    node('Marcar Descartado', 'n8n-nodes-base.dataTable')
+      .setParameter('resource', 'dataTable')
+      .setParameter('operation', 'update')
+      .setParameter('tableId', { __rl: true, mode: 'name', value: 'YOUR_PENDIENTES_TABLE' })
+      .setParameter('matchType', 'allConditions')
+      .setParameter('filters', {
+        conditions: [
+          { keyName: 'estado', condition: 'eq', keyValue: 'pendiente' },
+        ],
+      })
+      .setParameter('columns', {
+        mappingMode: 'defineBelow',
+        value: { estado: 'descartado' },
+      })
+  )
+
   // ----------------------------------------------------------
   // CONEXIONES (Wire)
   // ----------------------------------------------------------
-  .connect('Recibir Borrador', 'Normalizar Datos del Borrador')
-  .connect('Normalizar Datos del Borrador', 'Guardar en Tabla')
-  .connect('Guardar en Tabla', 'Preparar Aviso Recibido')
-  .connect('Preparar Aviso Recibido', 'Enviar Borrador a Telegram')
-  .connect('Enviar Borrador a Telegram', 'Esperar Callback')
-  .connect('Esperar Callback', 'Clasificar Interaccion')
-  .connect('Clasificar Interaccion', 'Estructurar Interaccion')
-  // sonda paralela: se ejecuta siempre, la lee "Insertar Bandera" por referencia
-  .connect('Clasificar Interaccion', 'Buscar Pendiente')
-  .connect('Estructurar Interaccion', 'Insertar Bandera')
-  // El Switch recibe UN solo item ya rotulado: publicar | editar | descartar | sinPendiente
+  // Rama webhook: recibe el borrador y lo muestra en Telegram (termina aqui).
+  .connect('Recibir Borrador de OpenCode', 'Normalizar Datos del Borrador')
+  .connect('Normalizar Datos del Borrador', 'Guardar Borrador Pendiente')
+  .connect('Guardar Borrador Pendiente', 'Enviar Borrador a Telegram')
+  // Rama de respuesta: el telegramTrigger escucha SIEMPRE (paralelo) y alimenta la
+  // clasificacion. Nunca se conecta nada HACIA un trigger.
+  .connect('Escuchar Telegram', 'Clasificar Interaccion')
+  .connect('Clasificar Interaccion', 'Buscar Pendiente')        // sonda paralela
+  .connect('Clasificar Interaccion', 'Insertar Bandera')        // lee la sonda por referencia
   .connect('Insertar Bandera', 'Rutear Interaccion')
-  .connect('Rutear Interaccion', 'Enviar Pregunta Edicion') // editar
-  .connect('Rutear Interaccion', 'Preparar Aviso Publicado') // publicar
-  .connect('Rutear Interaccion', 'Marcar Descartado') // descartar
-  .connect('Rutear Interaccion', 'Aviso Sin Pendiente') // sinPendiente
-  // (Buscar Pendiente alimenta "Insertar Bandera" por referencia $('Buscar Pendiente'))
-  .connect('Enviar Pregunta Edicion', 'Esperar Respuesta Edicion')
-  .connect('Esperar Respuesta Edicion', 'Preparar Prompt Edicion')
-  .connect('Preparar Prompt Edicion', 'Reescribir con IA')
-  .connect('Reescribir con IA', 'Preparar Nueva Version')
-  .connect('Preparar Nueva Version', 'Actualizar Pendiente')
-  .connect('Actualizar Pendiente', 'Aviso Version Nueva')
-  .connect('Preparar Aviso Publicado', 'Enviar Aviso Publicado')
-  .connect('Enviar Aviso Publicado', 'Publicar en LinkedIn')
-  .connect('Marcar Descartado', 'Aviso Descartado')
+  // El Switch recibe un item ya rotulado: publicar | descartar | editar | sinPendiente
+  .connect('Rutear Interaccion', 'Buscar Pendiente Publicar')   // publicar
+  .connect('Rutear Interaccion', 'Buscar Pendiente Descartar')  // descartar
+  .connect('Rutear Interaccion', 'Buscar Pendiente Editar')     // editar
+  .connect('Rutear Interaccion', 'Aviso Sin Pendiente')         // sinPendiente
+  // Rama publicar: primero LinkedIn, despues marcar y avisar
+  .connect('Buscar Pendiente Publicar', 'Publicar en LinkedIn')
+  .connect('Publicar en LinkedIn', 'Marcar Publicado')
+  .connect('Marcar Publicado', 'Notificar Publicado')
+  // Rama editar
+  .connect('Buscar Pendiente Editar', 'Preparar Prompt Edicion')
+  .connect('Preparar Prompt Edicion', 'DeepSeek Model')
+  .connect('DeepSeek Model', 'Guardar Borrador Editado')
+  .connect('Guardar Borrador Editado', 'Reenviar Borrador Mejorado')
+  // Rama descartar
+  .connect('Buscar Pendiente Descartar', 'Marcar Descartado')
+  .connect('Marcar Descartado', 'Notificar Descartado')

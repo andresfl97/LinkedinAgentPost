@@ -31,20 +31,22 @@ Enviado desde tu agente · n8n</tspan>
   <!-- Botones inline de Telegram -->
   <text x="260" y="470" text-anchor="middle" font-size="12" fill="#5b6b7a">Elige una acción ⤵</text>
 
-  <rect x="80" y="492" width="130" height="46" rx="23" fill="#4a90d9"/>
-  <text x="145" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">✅ Publicar</text>
+  <rect x="120" y="492" width="170" height="46" rx="23" fill="#4a90d9"/>
+  <text x="205" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">✅ Publicar</text>
 
-  <rect x="220" y="492" width="130" height="46" rx="23" fill="#4a90d9"/>
-  <text x="285" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">✏️ Editar</text>
+  <rect x="310" y="492" width="170" height="46" rx="23" fill="#d44d4d"/>
+  <text x="395" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">❌ Descartar</text>
 
-  <rect x="360" y="492" width="130" height="46" rx="23" fill="#d44d4d"/>
-  <text x="425" y="520" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">❌ Descartar</text>
+  <!-- Sugerencia de escritura -->
+  <text x="260" y="568" text-anchor="middle" font-size="12" fill="#5b6b7a">…o escribe tu cambio 💬</text>
+  <rect x="110" y="578" width="300" height="34" rx="17" fill="#ffffff"/>
+  <text x="260" y="600" text-anchor="middle" font-size="12" fill="#35424a">"hazlo más breve", "cambia el título"…</text>
 
   <!-- Pie -->
-  <rect x="70" y="575" width="420" height="80" rx="14" fill="#ffffff" opacity="0.9"/>
-  <text x="95" y="603" font-size="12" font-weight="bold" fill="#2a6eb0">¿Qué pasa después?</text>
-  <text x="95" y="622" font-size="11" fill="#35424a">✅ n8n publica en tu perfil · ✏️ la IA reescribe y</text>
-  <text x="95" y="639" font-size="11" fill="#35424a">vuelve a preguntar · ❌ no publica nada.</text>
+  <rect x="70" y="625" width="420" height="60" rx="14" fill="#ffffff" opacity="0.9"/>
+  <text x="95" y="650" font-size="12" font-weight="bold" fill="#2a6eb0">¿Qué pasa después?</text>
+  <text x="95" y="669" font-size="11" fill="#35424a">✅ n8n publica en tu perfil · 💬 la IA reescribe y</text>
+  <text x="95" y="683" font-size="11" fill="#35424a">vuelve a preguntar · ❌ no publica nada.</text>
 
-  <text x="260" y="685" text-anchor="middle" font-size="10" fill="#8a9aa6">Mockup ilustrativo · LibreLinkedinAgentPost</text>
+  <text x="260" y="695" text-anchor="middle" font-size="10" fill="#8a9aa6">Mockup ilustrativo · LibreLinkedinAgentPost</text>
 </svg>

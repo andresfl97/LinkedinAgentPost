@@ -29,14 +29,14 @@
 
   <!-- 4. Telegram (decision) -->
   <polygon points="760,140 848,200 760,260 672,200" fill="#e9eff7" stroke="#3374c8" stroke-width="2"/>
-  <text x="760" y="190" text-anchor="middle" font-size="13" font-weight="bold" fill="#21538f">Telegram</text>
-  <text x="760" y="207" text-anchor="middle" font-size="11" fill="#3374c8">✅ Publicar</text>
-  <text x="760" y="222" text-anchor="middle" font-size="11" fill="#3374c8">✏️ Editar · ❌ Descartar</text>
+  <text x="760" y="188" text-anchor="middle" font-size="13" font-weight="bold" fill="#21538f">Telegram</text>
+  <text x="760" y="205" text-anchor="middle" font-size="11" fill="#3374c8">✅ Publicar · ❌ Descartar</text>
+  <text x="760" y="220" text-anchor="middle" font-size="10" fill="#3374c8">💬 o escribe tu cambio</text>
 
   <!-- 5. DeepSeek -->
   <rect x="905" y="55" width="150" height="66" rx="12" fill="#f7e9f2" stroke="#c85a9a" stroke-width="2"/>
   <text x="980" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#8a2d66">DeepSeek</text>
-  <text x="980" y="104" text-anchor="middle" font-size="11" fill="#b0478a">solo si pides editar</text>
+  <text x="980" y="104" text-anchor="middle" font-size="11" fill="#b0478a">solo si escribes un cambio</text>
 
   <!-- 6. LinkedIn -->
   <rect x="900" y="305" width="160" height="66" rx="12" fill="#e8fbfb" stroke="#2f9aa0" stroke-width="2"/>
@@ -55,7 +55,7 @@
 
   <!-- editar: Telegram -> DeepSeek y vuelta -->
   <path d="M 835 160 C 870 120, 890 110, 902 96" fill="none" stroke="#c85a9a" stroke-width="2" marker-end="url(#arr)"/>
-  <text x="862" y="120" font-size="11" fill="#c85a9a">✏️ editar</text>
+  <text x="862" y="120" font-size="11" fill="#c85a9a">💬 editar</text>
   <path d="M 912 122 C 900 138, 862 152, 842 162" fill="none" stroke="#c85a9a" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
   <text x="852" y="150" font-size="10" fill="#c85a9a">vuelve a preguntar</text>
 
