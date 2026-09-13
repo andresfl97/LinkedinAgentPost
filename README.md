@@ -47,6 +47,17 @@ versión: la cadena de n8n moría callada).
 - Aprobación, edición y descarte registrados; cada interacción responde (incluido el
   aviso de "no hay pendientes").
 
+### Así llega el mensaje a tu Telegram
+
+1. Tu agente manda el borrador al webhook de n8n (`POST /linkedin-draft-v2`).
+2. n8n lo guarda en la data table como `pendiente` y el bot de Telegram te lo envía
+   con los botones **✅ Publicar · ✏️ Editar · ❌ Descartar**.
+3. Tú respondes desde el móvil; el callback vuelve a n8n, que decide la rama.
+4. El flujo siempre responde: publicado, reescrito pendiente de re-aprobación, o aviso
+   de "no hay pendientes".
+
+<img src="assets/screenshots/captura-resultado-telegram.png" alt="La aprobacion llega al movil por Telegram" width="520"/>
+
 ## Capturas en vivo
 
 _Pega aquí las capturas reales de tu flujo en acción (la bandeja de Telegram, el post
@@ -61,7 +72,7 @@ publicado en LinkedIn, la data table de pendientes, ...)._
     <td align="center">
       <img src="assets/screenshots/captura-flujo-telegram.png" alt="Aprobación y edición desde Telegram" width="420"/>
       <br/>
-      <sub><i>Edita este pie de foto</i></sub>
+      <sub><i>Flujo de n8n</i></sub>
     </td>
   </tr>
 </table>
