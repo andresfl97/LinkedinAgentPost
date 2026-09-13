@@ -1,6 +1,6 @@
 ---
-name: linkedin-post-style
-description: Reglas de estilo, tono y anti-alucinacion para redactar posts de LinkedIn del usuario a partir de sus notas de avance en Obsidian, en dos secciones: aprendizaje (SQL/Python en "Data Analyst Base de Conocimiento/") y Kira ("Kira AI Project/").
+name: "linkedin-post-style"
+description: "Reglas de estilo, tono y anti-alucinacion para redactar posts de LinkedIn del usuario a partir de sus notas de avance en Obsidian, en dos secciones: aprendizaje (SQL/Python en 'Data Analyst Base de Conocimiento/') y Kira ('Kira AI Project/')."
 license: MIT
 compatibility: opencode
 metadata:
