@@ -55,6 +55,23 @@ secciones en un mismo post.
   abstracta.
 - Longitud objetivo: 80-150 palabras. Nada de post-ensayo.
 
+## Firma obligatoria (siempre al final, sin excepcion)
+
+Todo post termina con EXACTAMENTE este bloque, en linea separada al final:
+
+- — Publicado por Kira AI Agent 🤖 + Andrés Flores · Data Analytics 📊
+
+La firma no varia entre posts y no cuenta dentro de las 80-150 palabras.
+
+## Regla anti-copycat (siempre)
+
+- El post comparte el AVANCE y el METODO de aprendizaje; nunca la implementacion de la
+  automatizacion (n8n, nodos, repositorios, webhooks, prompts o detalles tecnicos del
+  agente).
+- Se puede nombrar a Kira como agente de IA y contar el RESULTADO (borrador listo,
+  verificacion de respaldo, aprobacion antes de publicar), pero no el COMO.
+- Sin estructura de "tutorial de como publico esto": facilitaria que lo copien.
+
 ## Cuando NO generar post
 
 Si la nota del dia no tiene ningun avance concreto (solo notas sueltas, ideas sin
