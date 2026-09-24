@@ -10,6 +10,11 @@
 //   YOUR_TELEGRAM_BOT_CREDENTIAL -> el nombre de tu credencial del bot en n8n
 //   YOUR_LINKEDIN_CREDENTIAL     -> el nombre de tu credencial de LinkedIn en n8n
 //   YOUR_DEEPSEEK_CREDENTIAL     -> el nombre de tu credencial de DeepSeek en n8n
+//   YOUR_WEBHOOK_HEADER_CREDENTIAL -> credencial Header Auth del webhook. Header
+//                                   "X-LinkedIn-Key" con un valor aleatorio largo;
+//                                   el agente lo lee de la variable de entorno
+//                                   LINKEDIN_WEBHOOK_KEY. Sin ese header el webhook
+//                                   responde 403.
 //
 // NO subas este archivo con valores reales a un repositorio publico.
 // Guarda tu version rellenada localmente (esta marcada en .gitignore como
@@ -47,6 +52,10 @@ workflow('LinkedIn Post con Edicion por Telegram')
     node('Recibir Borrador de OpenCode', 'n8n-nodes-base.webhook')
       .setParameter('httpMethod', 'POST')
       .setParameter('path', 'linkedin-draft-v2')
+      // Header Auth: el webhook solo acepta llamadas que lleven el header con la
+      // clave. Sin el, responde 403 y nadie puede inyectar borradores en tu cola.
+      // La credencial se conecta en la UI (ver YOUR_WEBHOOK_HEADER_CREDENTIAL).
+      .setParameter('authentication', 'headerAuth')
       .setParameter('responseMode', 'onReceived')
   )
 

@@ -161,7 +161,11 @@ expuesto por HTTP, un **bot de Telegram**, una app de **LinkedIn** con permiso
    `sourceNote`, `veredicto`, `imageUrl`, `chatId`, `estado`) y genera el workflow desde
    `workflows/linkedin-post-v2.template.ts` (n8n → Workflow SDK / importar). Rellena
    todos los `YOUR_*` y conecta las credenciales del bot, de LinkedIn y de DeepSeek a
-   sus nodos.
+   sus nodos. El webhook usa **Header Auth**: crea una credencial de ese tipo con el
+   header `X-LinkedIn-Key` y un valor aleatorio largo, conéctala al nodo del webhook y
+   exporta ese valor como la variable de entorno `LINKEDIN_WEBHOOK_KEY` (es lo único
+   que el agente lee para enviar). Sin ese header el webhook responde 403 y nadie más
+   puede inyectar borradores en tu cola.
 5. **Prueba.** Manda un borrador al webhook `POST /linkedin-draft-v2`
    (`{"draftText": "...", "seccion": "kira", "fecha": "2026-09-13", "chatId": "..."}`)
    y aprueba desde Telegram.

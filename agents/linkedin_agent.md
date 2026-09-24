@@ -84,6 +84,21 @@ Tu flujo de publicacion (sigue los pasos sin saltarte ninguno):
    `imageUrl` y `chatId`. Un insert en la data table NO dispara el workflow: el
    unico disparador es el webhook.
 
+   El webhook exige el header `X-LinkedIn-Key`. Sin el responde 403. La clave se lee
+   de la variable de entorno `LINKEDIN_WEBHOOK_KEY` y NUNCA se escribe en el repo ni
+   se imprime en el chat. El header va DESPUES de la URL para que el patron de
+   permiso `curl -X POST https://kiraautomate.com/webhook*` siga matcheando:
+
+   ```
+   curl -X POST https://kiraautomate.com/webhook/linkedin-draft-v2 \
+     -H "Content-Type: application/json" \
+     -H "X-LinkedIn-Key: $LINKEDIN_WEBHOOK_KEY" \
+     -d '{"draftText":"...","sourceNote":"...","seccion":"aprendizaje","fecha":"YYYY-MM-DD","veredicto":"PENDIENTE","imageUrl":"...","chatId":7150980692}'
+   ```
+
+   Si la variable no esta definida, avisale a Andres: el proceso de opencode se
+   reinicio despues de crearla.
+
 9. Aprobacion en Telegram: el bot envia el borrador con botones. Andres edita escribiendo
    en el chat o pulsa Publicar/Descartar. Tu solo auditas: si algo falla, revisa las
    ejecuciones con las tools del MCP `n8n-mcp-kira-agent` y reporta el nodo exacto.

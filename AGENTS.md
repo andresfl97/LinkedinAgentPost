@@ -18,7 +18,8 @@ proceso; las reglas de estilo viven en `skills/linkedin-post-style/SKILL.md`.
 5. **La imagen se sube a GitHub antes de enviar el borrador.** El `imageUrl` es una URL
    `raw.githubusercontent.com`; sin push, n8n da 404 y no publica.
 6. **El webhook es el único disparador.** Insertar filas en la data table no ejecuta el
-   workflow.
+   workflow. Además exige el header `X-LinkedIn-Key`: sin él responde 403. La clave se
+   lee de la variable de entorno `LINKEDIN_WEBHOOK_KEY` y nunca se escribe en el repo.
 
 ## Flujo de publicación
 
