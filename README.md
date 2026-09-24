@@ -1,15 +1,15 @@
 # LinkedinAgentPost
 
-Pipeline **open source** para publicar en LinkedIn desde tus notas de estudio: un
+Pipeline **open source** para publicar en LinkedIn desde tus notas: un
 agente de OpenCode redacta el borrador a partir de tu Obsidian (con verificación
-anti-alucinación), un webhook de n8n lo guarda y, desde **Telegram**, lo editas,
-descartas o **publicas con un toque**.
+anti-alucinación), genera la imagen del post, y un webhook de n8n lo guarda y, desde
+**Telegram**, lo editas, descartas o **publicas con un toque**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> Ejemplo real en producción, construido por un analista de datos en formación que
-> estudia SQL/Python y construye su proyecto de IA **Kira** — y quería compartirlo en
-> LinkedIn sin que la redacción le robara tiempo de estudio.
+> Ejemplo real en producción, construido por un analista de datos que trabaja con
+> SQL/Python y proyectos de IA **Kira** — y publica en LinkedIn sin que la redacción
+> le robe tiempo.
 
 ---
 
@@ -57,7 +57,28 @@ de texto: clasifica la interacción (`publicar | editar | descartar`), una sonda
 revisa la cola y, si no hay pendiente, avisa en vez de morir en silencio; si hay
 pendiente, cada rama actúa. La edición reescribe con DeepSeek, guarda la nueva versión en
 la cola y vuelve a pedir aprobación; la publicación usa el nodo LinkedIn con
-`postAs: person` y `visibility: PUBLIC`.
+`postAs: person` y `visibility: PUBLIC`. Todos los nodos Telegram usan
+`parseMode: 'None'`: el texto del post es plano y parsearlo rompe el envío.
+
+## La imagen: dark, generada por el agente
+
+La imagen del post no es una captura del usuario: la genera el propio agente con
+`scripts/generar-imagen-post.py`, y siempre con el mismo diseño.
+
+- Lienzo 1080x1350 (4:5), tema dark.
+- Pregunta de negocio arriba, panel SQL con resaltado, grilla con **resultados reales**
+  (el query se ejecuta, no se inventa), caja de takeaway.
+- Firma `KIRA AI` en la barra lateral vertical, siempre en el mismo lugar.
+
+```bash
+python scripts/generar-imagen-post.py --config post.json --out assets/screenshots/mi-post.png
+```
+
+El `imageUrl` que viaja al workflow es la URL `raw.githubusercontent.com` de esa imagen, y
+la imagen se sube a GitHub **antes** de llamar al webhook: n8n la descarga desde esa URL y
+responde 404 si el archivo todavía no está publicado.
+
+![Ejemplo de la imagen dark: query de window ranking functions con su grilla y la firma KIRA AI](assets/screenshots/ssms-seccion14.png)
 
 ## Capturas en vivo
 
@@ -96,22 +117,24 @@ _Pega aquí tus capturas reales del flujo en acción._
 
 ```
 LinkedinAgentPost/
+├── AGENTS.md                        # flujo y decisiones firmes del pipeline
 ├── agents/
-│   ├── linkedin_agent.md          # orquestador: drafter + fact-checker + envío por webhook
-│   ├── linkedin-drafter.md        # redacta desde las notas, siguiendo la skill
+│   ├── linkedin_agent.md          # orquestador: drafter + fact-checker + imagen + envío
+│   ├── linkedin-drafter.md        # redacta desde las notas y fija el query de la imagen
 │   └── linkedin-fact-checker.md   # verificación anti-alucinación oración a oración
 ├── skills/
-│   └── linkedin-post-style/       # guía de estilo, tono y anti-alucinación
+│   └── linkedin-post-style/       # guía de estilo, texto plano, imagen dark y anti-alucinación
 ├── plugin/
-│   └── linkedin-trigger.ts        # dispara el borrador al quedar la sesión inactiva
+│   └── linkedin-trigger.ts        # dispara el borrador al quedar la sesión inactiva y valida el formato
 ├── workflows/
 │   └── linkedin-post-v2.template.ts  # plantilla n8n (Workflow SDK) con placeholders
 ├── scripts/
+│   ├── generar-imagen-post.py      # generador de la imagen dark 1080x1350
 │   └── scan-secrets.sh            # escáner genérico de secretos (pre-push)
 ├── assets/
 │   ├── diagrama-flujo.svg         # diagrama general
 │   ├── telegram-mockup.svg        # mockup del mensaje con botones
-│   └── screenshots/               # tus capturas en vivo
+│   └── screenshots/               # imágenes de los posts (URL estable por nombre)
 ├── opencode.json.example          # copia a opencode.json con TU token MCP
 ├── SECURITY.md
 └── LICENSE
@@ -123,8 +146,9 @@ Prerrequisitos: una instancia de **n8n** (self-hosted o cloud), el **MCP server*
 expuesto por HTTP, un **bot de Telegram**, una app de **LinkedIn** con permiso
 `w_member_social`, y una **API key de DeepSeek** (o tu LLM preferido).
 
-1. **Agentes y skill.** Copia `agents/*.md` a `~/.config/opencode/agents/` y
-   `skills/linkedin-post-style/` a tus skills.
+1. **Agentes, skill y AGENTS.md.** Copia `agents/*.md` a `~/.config/opencode/agents/`,
+   `skills/linkedin-post-style/` a tus skills y `AGENTS.md` a la raíz de tu proyecto
+   (ahí queda el flujo y las decisiones que no se negocian).
 2. **Plugin.** Instala `plugin/linkedin-trigger.ts` y define las variables de entorno
    (sin rutas reales en el repo):
    ```bash

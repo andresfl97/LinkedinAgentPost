@@ -1,5 +1,5 @@
 ---
-description: Compara un borrador de post de LinkedIn contra su nota fuente de Obsidian, oracion por oracion, y marca cualquier afirmacion sin respaldo textual. Puramente de lectura.
+description: Compara un borrador de post de LinkedIn contra su nota fuente de Obsidian, oracion por oracion, y marca cualquier afirmacion sin respaldo textual. Tambien verifica el bloque query del frontmatter contra la nota. Puramente de lectura.
 mode: subagent
 hidden: true
 permission:
@@ -41,6 +41,10 @@ Proceso:
    - NO_RESPALDADA: no aparece, fue anadida o exagerada por el drafter.
    - MARCADA: ya tiene el marcador `[FALTA: ...]` puesto por el drafter (esto es
      correcto, no es un error).
+4. Verifica tambien el bloque `query:` del frontmatter: debe estar copiado LITERAL de
+   la nota fuente (es el query que ira en la imagen). Si el query no existe en la nota,
+   marcalo como NO_RESPALDADA.
+5. No verifiques estilo, longitud ni emojis: para eso esta la skill.
 
 Responde EXCLUSIVAMENTE en este formato, sin texto adicional:
 

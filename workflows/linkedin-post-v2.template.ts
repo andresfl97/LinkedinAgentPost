@@ -14,6 +14,18 @@
 // NO subas este archivo con valores reales a un repositorio publico.
 // Guarda tu version rellenada localmente (esta marcada en .gitignore como
 // workflows/*.real.json si exportas JSON, o fuera del repo).
+//
+// REGLAS DEL CONTENIDO (ver skills/linkedin-post-style/SKILL.md):
+//   1. draftText va en TEXTO PLANO: sin **, sin backticks, sin cursivas. LinkedIn
+//      no renderiza markdown y el nodo Telegram con parse mode Markdown falla
+//      con "can't parse entities". Todos los nodos Telegram de este template
+//      fijan parseMode: 'None'.
+//   2. imageUrl debe ser una URL publica y ya publicada. En este proyecto es
+//      https://raw.githubusercontent.com/<owner>/<repo>/main/assets/screenshots/<slug>.png
+//      y la imagen tiene que estar commiteada y pusheada ANTES de llamar al
+//      webhook: si no, el nodo "Descargar Imagen" responde 404 y no publica.
+//   3. Insertar filas en la data table NO dispara este workflow. El unico
+//      disparador es el webhook POST /linkedin-draft-v2.
 // ============================================================================
 
 workflow('LinkedIn Post con Edicion por Telegram')
@@ -127,7 +139,11 @@ workflow('LinkedIn Post con Edicion por Telegram')
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', "={{ $('Normalizar Datos del Borrador').item.json.chatId }}")
       .setParameter('text', "={{ '📝 Borrador para LinkedIn\\nSección: ' + $('Normalizar Datos del Borrador').item.json.seccion + ' · Fecha: ' + $('Normalizar Datos del Borrador').item.json.fecha + '\\n\\n' + $('Normalizar Datos del Borrador').item.json.draftText + '\\n\\n💬 Escribe en este chat un cambio (ej: \"se más breve\", \"cambia el título\") o pulsa un botón.' }}")
+      // parseMode: 'None' es OBLIGATORIO. Con el default (Markdown) cualquier
+      // guion bajo o asterisco sin cerrar rompe el envio con
+      // "can't parse entities". El post va en texto plano, asi que no se parsea.
       .setParameter('additionalFields', {
+        parseMode: 'None',
         replyMarkup: JSON.stringify({
           inline_keyboard: [
             [
@@ -210,6 +226,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
       .setParameter('text', '📭 No hay ningún borrador pendiente para editar o publicar. Envía un borrador nuevo primero (desde tu agente).')
+      .setParameter('additionalFields', { parseMode: 'None' })
   )
 
   // ----------------------------------------------------------
@@ -281,6 +298,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
       .setParameter('text', "={{ '📝 Borrador para LinkedIn (editado)\\n\\n' + $('Guardar Borrador Editado').item.json.draftText + '\\n\\n💬 Escribe otro cambio o pulsa un botón.' }}")
+      .setParameter('additionalFields', { parseMode: 'None' })
       .setParameter('additionalFields', {
         replyMarkup: JSON.stringify({
           inline_keyboard: [
@@ -316,6 +334,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
       .setParameter('text', "={{ '✅ Publicado en tu perfil de LinkedIn.\\n\\n' + $('Buscar Pendiente Publicar').item.json.draftText }}")
+      .setParameter('additionalFields', { parseMode: 'None' })
   )
 
   .add(
@@ -369,6 +388,7 @@ return [{ json: { ...original, tipo: sinPendientes ? 'sinPendiente' : original.t
       .setParameter('operation', 'sendMessage')
       .setParameter('chatId', 'YOUR_TELEGRAM_CHAT_ID')
       .setParameter('text', '🗑️ Borrador descartado. No se publicó.')
+      .setParameter('additionalFields', { parseMode: 'None' })
   )
 
   .add(
