@@ -182,6 +182,25 @@ def draw_takeaway(d, cfg, margin, content_w, y, take_y, take_h=108):
         d.text((margin + 26, y + 50 + i * 30), line, font=take_f, fill=TEXT)
 
 
+def draw_sidebar(img, author):
+    name = author.upper()
+    f = font(SANS_B, 30)
+    probe = ImageDraw.Draw(img)
+    name_w = int(probe.textlength(name, font=f))
+    brand_w = int(probe.textlength("KIRA AI", font=f))
+    sep = 70
+    total = name_w + sep + brand_w + 16
+    canvas = Image.new("RGBA", (total, 52), (0, 0, 0, 0))
+    cd = ImageDraw.Draw(canvas)
+    cd.text((0, 9), name, font=f, fill=TEXT)
+    cd.text((name_w + 26, 9), "·", font=f, fill=MUTED)
+    cd.text((name_w + sep, 9), "KIRA AI", font=f, fill=GREEN)
+    canvas = canvas.rotate(90, expand=True)
+    x = W - SIDEBAR - canvas.width + 10
+    y = (H - canvas.height) // 2
+    img.paste(canvas, (x, y), canvas)
+
+
 def build(cfg):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
@@ -189,13 +208,7 @@ def build(cfg):
     d.rectangle([W - SIDEBAR, 0, W, H], fill="#070A0E")
     d.line([(W - SIDEBAR, 0), (W - SIDEBAR, H)], fill=BORDER, width=2)
 
-    brand = Image.new("RGBA", (900, 60), (0, 0, 0, 0))
-    bd = ImageDraw.Draw(brand)
-    bf = font(SANS_B, 34)
-    tw = int(bd.textlength("KIRA AI", font=bf))
-    bd.text(((900 - tw) / 2, 10), "KIRA AI", font=bf, fill=GREEN)
-    brand = brand.rotate(90, expand=True)
-    img.paste(brand, (W - SIDEBAR - 60 + 12, (H - brand.height) // 2), brand)
+    draw_sidebar(img, cfg.get("author", "Andres Flores"))
     d = ImageDraw.Draw(img)
 
     margin = 56

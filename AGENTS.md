@@ -48,8 +48,14 @@ proceso; las reglas de estilo viven en `skills/linkedin-post-style/SKILL.md`.
 python scripts/generar-imagen-post.py --config <config.json> --out assets/screenshots/<slug>.png
 ```
 
-Config JSON: `label`, `title`, `query` (array de líneas), `columns`, `rows`,
-`highlight_rows` (índices), `takeaway`.
+Config JSON:
+- `layout`: `code` (query completa arriba, grilla abajo) o `concept` (gancho, tarjetas de
+  "lo que quieres / lo que obtienes", el arreglo y el ejemplo abajo). Para posts que
+  explican un concepto o un error, `concept` retiene más.
+- Comunes: `label`, `title`, `columns`, `rows`, `highlight_rows`, `takeaway`.
+- `author`: nombre que va en la barra lateral (por defecto `Andres Flores`).
+- Solo `concept`: `cards` (lista de `{label, text, tone}` con tone `green|amber|red`),
+  `fix` (`{label, code}`), `example_label`, `col_colors` (índice de columna → color).
 
 Paleta: fondo `#0B0F14`, paneles `#131A22`/`#0F151C`, bordes `#243040`, texto `#E6EDF3`,
 verde `#3FB950` (SQL y fila destacada), azul `#58A6FF` (takeaway). Fuentes: `consola.ttf`,

@@ -85,8 +85,14 @@ de la ejecucion real.
      corta con `...` al final; nunca al principio).
   4. Grilla de resultados con 5-8 filas REALES, la primera resaltada en verde.
   5. Caja TAKEAWAY con una sola idea de criterio/decision.
-- Barra lateral vertical de 56px con `KIRA AI` rotado 90 en verde: es la firma de la
-  imagen y va SIEMPRE en el mismo lugar.
+- Barra lateral vertical de 56px: `ANDRES FLORES` (blanco) + `KIRA AI` (verde), rotados,
+  siempre en el mismo lugar. Es la identidad del post: la persona y la herramienta.
+- Dos layouts, según el post:
+  - `code`: etiqueta, título, panel SQL con la query completa, grilla de resultados y
+    takeaway. Para posts donde lo interesante es la query.
+  - `concept`: gancho grande, dos tarjetas ("lo que quieres" / "lo que obtienes"), el
+    arreglo en SQL y abajo el ejemplo real. Para posts que explican un concepto o un
+    error: retiene más que la query sola.
 - Los datos de la grilla salen de ejecutar el query (MCP SQL Server). Si no se ejecuto,
   no se inventa la grilla: se reduce a lo que la nota sustenta.
 - Coherencia obligatoria: el post describe EXACTAMENTE el query que aparece en la imagen.
