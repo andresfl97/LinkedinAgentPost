@@ -60,9 +60,12 @@ Config JSON:
   `fix` (uno o varios `{label, code}` para mostrar más de una solución), `example_label`,
   `badges` (índice de columna → `bad` o `good`, dibuja ✗/✓), `col_colors`.
 
-Paleta: fondo `#0B0F14`, paneles `#131A22`/`#0F151C`, bordes `#243040`, texto `#E6EDF3`,
-verde `#3FB950` (SQL y fila destacada), azul `#58A6FF` (takeaway). Fuentes: `consola.ttf`,
-`consolab.ttf`, `segoeui.ttf`, `segoeuib.ttf`.
+Paleta (decidida por Andres, no negociar): navy `#001B30` fondo, graphite `#182736`
+paneles, blanco frío `#E7E7E9` texto, cobre `#B08D57` acento único, gris `#868C96`
+secundario y columna que miente. Fuentes: `consola.ttf`, `consolab.ttf`, `segoeui.ttf`,
+`segoeuib.ttf` y `seguisym.ttf` para los iconos ✓/✗. Tipografía grande: titulo 58-60px,
+tarjetas 25px, codigo 21px, grilla 30-32px con 5-6 filas (antes letra chica que grilla
+llena).
 
 Ejemplo real: `assets/screenshots/ssms-seccion14.png` (query de window ranking functions
 con su grilla real y la firma lateral).

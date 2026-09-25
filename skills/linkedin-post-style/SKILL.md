@@ -75,9 +75,12 @@ de la ejecucion real.
 - Generador: `LinkedinAgentPost/scripts/generar-imagen-post.py --config <config.json> --out <png>`.
   La config lleva: `label`, `title`, `query` (lineas), `columns`, `rows`,
   `highlight_rows` y `takeaway`.
-- Lienzo 1080x1350 (4:5, ocupa mas pantalla en el feed). Paleta dark:
-  fondo `#0B0F14`, paneles `#131A22` / `#0F151C`, bordes `#243040`, texto `#E6EDF3`,
-  acento verde `#3FB950` (SQL + fila destacada) y azul `#58A6FF` (takeaway).
+- Lienzo 1080x1350 (4:5, ocupa mas pantalla en el feed). Paleta de Andres (no negociar):
+  navy `#001B30` (fondo), graphite `#182736` (paneles), blanco frío `#E7E7E9` (texto),
+  cobre `#B08D57` (acento único) y gris `#868C96` (secundario y columna incorrecta).
+- Tipografía grande: es una regla. Titulo 58-60px, cuerpo de tarjetas 25px, codigo 21px,
+  grilla 30-32px con 5-6 filas. Si no caben mas filas, se recortan: antes letra chica
+  que una grilla llena.
 - Layout, de arriba hacia abajo:
   1. Etiqueta corta con motor y tema (ej: "SQL Server · Window ranking functions").
   2. Titulo = la pregunta de negocio que responde el query.
