@@ -10,9 +10,9 @@ proceso; las reglas de estilo viven en `skills/linkedin-post-style/SKILL.md`.
    mode Markdown falla con `can't parse entities`. El enfasis viene de la estructura,
    no del markdown.
 2. **La imagen la genera el agente** con `scripts/generar-imagen-post.py`: dark, 1080x1350,
-   con la firma `KIRA AI` en la barra lateral vertical. No se piden capturas al usuario
+   sin firma ni marca lateral. No se piden capturas al usuario
    y **no se usan modelos de visión** (quedaron descartados).
-3. **La firma `KIRA AI` solo existe en la imagen.** El texto del post nunca nombra a
+3. **La imagen no lleva el nombre de Andres ni la marca.** El texto del post tampoco nombra a
    agentes, IA ni automatización.
 4. **5 bullets, 1 emoji cada uno**, cierre de 1-2 líneas de impacto y hashtags al final.
 5. **La imagen se sube a GitHub antes de enviar el borrador.** El `imageUrl` es una URL
@@ -50,12 +50,15 @@ python scripts/generar-imagen-post.py --config <config.json> --out assets/screen
 
 Config JSON:
 - `layout`: `code` (query completa arriba, grilla abajo) o `concept` (gancho, tarjetas de
-  "lo que quieres / lo que obtienes", el arreglo y el ejemplo abajo). Para posts que
-  explican un concepto o un error, `concept` retiene más.
-- Comunes: `label`, `title`, `columns`, `rows`, `highlight_rows`, `takeaway`.
-- `author`: nombre que va en la barra lateral (por defecto `Andres Flores`).
-- Solo `concept`: `cards` (lista de `{label, text, tone}` con tone `green|amber|red`),
-  `fix` (`{label, code}`), `example_label`, `col_colors` (índice de columna → color).
+  "lo que quieres / lo que obtienes", las dos opciones de arreglo y el ejemplo abajo).
+  Para posts que explican un concepto o un error, `concept` retiene más.
+- Comunes: `label`, `title`, `title_size`, `columns`, `rows`, `font_size`, `row_h`,
+  `highlight_rows`, `takeaway`, `show_takeaway`, `footer`.
+- `signature`: por defecto `false` (la imagen no lleva nombre ni marca lateral). Con
+  `true` + `author` se recupera la barra vertical.
+- Solo `concept`: `cards` (lista de `{label, text, tone, icon}` con tone `green|amber|red`),
+  `fix` (uno o varios `{label, code}` para mostrar más de una solución), `example_label`,
+  `badges` (índice de columna → `bad` o `good`, dibuja ✗/✓), `col_colors`.
 
 Paleta: fondo `#0B0F14`, paneles `#131A22`/`#0F151C`, bordes `#243040`, texto `#E6EDF3`,
 verde `#3FB950` (SQL y fila destacada), azul `#58A6FF` (takeaway). Fuentes: `consola.ttf`,

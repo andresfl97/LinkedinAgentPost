@@ -66,9 +66,11 @@ La imagen del post no es una captura del usuario: la genera el propio agente con
 `scripts/generar-imagen-post.py`, y siempre con el mismo diseño.
 
 - Lienzo 1080x1350 (4:5), tema dark.
-- Pregunta de negocio arriba, panel SQL con resaltado, grilla con **resultados reales**
-  (el query se ejecuta, no se inventa), caja de takeaway.
-- Firma `KIRA AI` en la barra lateral vertical, siempre en el mismo lugar.
+- Dos layouts: `code` (query completa arriba, grilla abajo) y `concept` (gancho, tarjetas
+  "lo que quieres / lo que obtienes", las dos formas de resolverlo y el ejemplo real
+  abajo, con ✗/✓ sobre las columnas).
+- Grilla con **resultados reales** (el query se ejecuta, no se inventa) y pie de fuente.
+- Sin firma ni marca en la imagen: la identidad la pone el texto y el contenido.
 
 ```bash
 python scripts/generar-imagen-post.py --config post.json --out assets/screenshots/mi-post.png
@@ -78,7 +80,7 @@ El `imageUrl` que viaja al workflow es la URL `raw.githubusercontent.com` de esa
 la imagen se sube a GitHub **antes** de llamar al webhook: n8n la descarga desde esa URL y
 responde 404 si el archivo todavía no está publicado.
 
-![Ejemplo de la imagen dark: query de window ranking functions con su grilla y la firma KIRA AI](assets/screenshots/ssms-seccion14.png)
+![Ejemplo de la imagen dark: el error de LAST_VALUE con sus dos correcciones y el ejemplo real](assets/screenshots/ssms-seccion15.png)
 
 ## Capturas en vivo
 

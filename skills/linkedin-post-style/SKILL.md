@@ -85,8 +85,10 @@ de la ejecucion real.
      corta con `...` al final; nunca al principio).
   4. Grilla de resultados con 5-8 filas REALES, la primera resaltada en verde.
   5. Caja TAKEAWAY con una sola idea de criterio/decision.
-- Barra lateral vertical de 56px: `ANDRES FLORES` (blanco) + `KIRA AI` (verde), rotados,
-  siempre en el mismo lugar. Es la identidad del post: la persona y la herramienta.
+- Sin firma en la imagen: no lleva nombre ni marca lateral. Andres lo pidió así. Si un
+  post necesita identidad, se activa con `signature: true` + `author`.
+- El takeaway es opcional (`show_takeaway: false` lo quita y deja pie de fuente con
+  `footer`). Para posts que ya tienen gancho + ejemplo, quitarlo suele retener mejor.
 - Dos layouts, según el post:
   - `code`: etiqueta, título, panel SQL con la query completa, grilla de resultados y
     takeaway. Para posts donde lo interesante es la query.
