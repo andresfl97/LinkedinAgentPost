@@ -7,13 +7,16 @@ from PIL import Image, ImageDraw, ImageFont
 W, H = 1080, 1350
 SIDEBAR = 56
 
-BG = "#001B30"
-PANEL = "#182736"
-PANEL_ALT = "#14212E"
-BORDER = "#2A3B4D"
-TEXT = "#E7E7E9"
-MUTED = "#868C96"
-ACCENT = "#B08D57"
+BG = "#0B0F14"
+PANEL = "#131A22"
+PANEL_ALT = "#0F151C"
+BORDER = "#243040"
+TEXT = "#E6EDF3"
+MUTED = "#8B98A5"
+GREEN = "#3FB950"
+BLUE = "#58A6FF"
+AMBER = "#D29922"
+RED = "#F85149"
 FONT_DIR = r"C:\Windows\Fonts"
 MONO = os.path.join(FONT_DIR, "consola.ttf")
 MONO_B = os.path.join(FONT_DIR, "consolab.ttf")
@@ -113,12 +116,12 @@ def draw_cards(d, cfg, margin, content_w, y):
     for i, c in enumerate(cards):
         x = margin + i * (cw + gap)
         tone = c.get("tone", "green")
-        accent = {"green": ACCENT, "amber": ACCENT, "red": MUTED, "copper": ACCENT, "grey": MUTED}.get(tone, ACCENT)
+        accent = {"green": GREEN, "amber": AMBER, "red": RED, "copper": AMBER, "grey": MUTED}.get(tone, GREEN)
         rounded(d, [x, y, x + cw, y + ch], 14, PANEL, BORDER, 2)
         d.rectangle([x, y, x + 4, y + ch], fill=accent)
-        d.text((x + 24, y + 17), c["label"].upper(), font=font(MONO_B, 18), fill=accent)
+        d.text((x + 24, y + 18), c["label"].upper(), font=font(MONO_B, 21), fill=accent)
         if c.get("icon"):
-            ic = font(SYM, 26)
+            ic = font(SYM, 28)
             d.text((x + cw - 50, y + 14), c["icon"], font=ic, fill=accent)
         for j, line in enumerate(wrap(d, c["text"], body_f, cw - 52)[:4]):
             d.text((x + 24, y + 56 + j * 32), line, font=body_f, fill=TEXT)
@@ -132,15 +135,15 @@ def draw_fix(d, cfg, margin, content_w, y):
     blocks = fix if isinstance(fix, list) else [fix]
     gap = 18
     bw = (content_w - gap * (len(blocks) - 1)) // len(blocks)
-    f = font(MONO, 21)
-    lh = 30
+    f = font(MONO, 24)
+    lh = 33
     h = 0
     for b in blocks:
         h = max(h, 52 + lh * len(b["code"]) + 14)
     for i, b in enumerate(blocks):
         x = margin + i * (bw + gap)
-        rounded(d, [x, y, x + bw, y + h], 12, PANEL_ALT, ACCENT, 2)
-        d.text((x + 22, y + 14), b.get("label", "fix").upper(), font=font(MONO_B, 17), fill=ACCENT)
+        rounded(d, [x, y, x + bw, y + h], 12, PANEL_ALT, GREEN, 2)
+        d.text((x + 22, y + 14), b.get("label", "fix").upper(), font=font(MONO_B, 17), fill=GREEN)
         for j, line in enumerate(b["code"]):
             d.text((x + 22, y + 52 + j * lh), line, font=f, fill=TEXT)
     return y + h
@@ -160,7 +163,7 @@ def draw_grid(d, cfg, margin, content_w, y, bottom_limit, col_colors=None):
         d.text((cx, y + 13), c.upper(), font=head_f, fill=MUTED)
         b = badges.get(str(i))
         if b:
-            bcol = {"bad": MUTED, "good": ACCENT}.get(b, MUTED)
+            bcol = {"bad": RED, "good": GREEN}.get(b, MUTED)
             mark = "✗" if b == "bad" else "✓"
             mf = font(SYM, head_fs + 6)
             mw = d.textlength(mark, font=mf)
@@ -176,15 +179,15 @@ def draw_grid(d, cfg, margin, content_w, y, bottom_limit, col_colors=None):
         bg = PANEL if r_i in top else PANEL_ALT
         rounded(d, [margin, y, margin + content_w, y + row_h], 8, bg, BORDER, 1)
         if r_i in top:
-            d.rectangle([margin, y, margin + 3, y + row_h], fill=ACCENT)
+            d.rectangle([margin, y, margin + 3, y + row_h], fill=GREEN)
         for i, cell in enumerate(row):
             val = str(cell)
             good = badges.get(str(i)) == "good"
             bad = badges.get(str(i)) == "bad"
             f = num_b if (r_i in top or good) else num_f
-            color = ACCENT if (r_i in top or good) else (col_colors or {}).get(str(i), TEXT)
+            color = GREEN if (r_i in top or good) else (col_colors or {}).get(str(i), TEXT)
             if bad and r_i not in top:
-                color = (col_colors or {}).get(str(i), MUTED)
+                color = (col_colors or {}).get(str(i), RED)
             w_px = d.textlength(val, font=f)
             ty = y + (row_h - fs - 4) // 2 + 2
             if i == 0:
@@ -198,8 +201,8 @@ def draw_grid(d, cfg, margin, content_w, y, bottom_limit, col_colors=None):
 def draw_takeaway(d, cfg, margin, content_w, y, take_y, take_h=108):
     y = max(y + 10, take_y)
     rounded(d, [margin, y, margin + content_w, y + take_h], 14, PANEL, BORDER, 2)
-    d.rectangle([margin, y, margin + 4, y + take_h], fill=ACCENT)
-    d.text((margin + 26, y + 18), "TAKEAWAY", font=font(MONO_B, 18), fill=ACCENT)
+    d.rectangle([margin, y, margin + 4, y + take_h], fill=GREEN)
+    d.text((margin + 26, y + 18), "TAKEAWAY", font=font(MONO_B, 18), fill=GREEN)
     take_f = font(SANS, 23)
     for i, line in enumerate(wrap(d, cfg["takeaway"], take_f, content_w - 60)[:2]):
         d.text((margin + 26, y + 50 + i * 30), line, font=take_f, fill=TEXT)
@@ -243,7 +246,7 @@ def build(cfg):
         take_y = H - 40
     y = 56
 
-    d.text((margin, y), cfg["label"].upper(), font=font(MONO_B, 20), fill=ACCENT)
+    d.text((margin, y), cfg["label"].upper(), font=font(MONO_B, 20), fill=GREEN)
     y += 34
 
     if cfg.get("layout") == "concept":
@@ -252,12 +255,12 @@ def build(cfg):
             d.text((margin, y), line, font=title_f, fill=TEXT)
             y += int(cfg.get("title_size", 58) * 1.2)
         y += 8
-        d.line([(margin, y), (margin + 72, y)], fill=ACCENT, width=5)
+        d.line([(margin, y), (margin + 72, y)], fill=GREEN, width=5)
         y += 30
         y = draw_cards(d, cfg, margin, content_w, y) + 24
         y = draw_fix(d, cfg, margin, content_w, y) + 24
         if cfg.get("example_label"):
-            d.text((margin, y), cfg["example_label"].upper(), font=font(MONO_B, 19), fill=MUTED)
+            d.text((margin, y), cfg["example_label"].upper(), font=font(MONO_B, 18), fill=MUTED)
             y += 36
         y = draw_grid(d, cfg, margin, content_w, y, take_y, cfg.get("col_colors")) + 6
         if cfg.get("show_takeaway", True) and cfg.get("takeaway"):
@@ -278,7 +281,7 @@ def build(cfg):
     q_lines = cfg["query"][:11]
     q_h = 42 + 30 * len(q_lines) + 14
     rounded(d, [margin, y, margin + content_w, y + q_h], 14, PANEL, BORDER, 2)
-    d.rectangle([margin, y, margin + 4, y + q_h], fill=ACCENT)
+    d.rectangle([margin, y, margin + 4, y + q_h], fill=GREEN)
     d.text((margin + 26, y + 16), "SQL", font=font(MONO_B, 18), fill=MUTED)
     draw_query(d, margin + 26, y + 52, content_w - 52, cfg["query"], 11)
     y += q_h + 22
