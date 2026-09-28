@@ -37,10 +37,21 @@ proceso; las reglas de estilo viven en `skills/linkedin-post-style/SKILL.md`.
 7. **Envío** (solo con OK de Andres) al webhook `POST /linkedin-draft-v2` con
    `draftText`, `sourceNote`, `seccion`, `fecha`, `veredicto: "PENDIENTE"`, `imageUrl`,
    `chatId`.
+   - **El payload va SIEMPRE en un archivo UTF-8, nunca inline en `curl -d`.** En Windows
+     el shell destruye los acentos y los emojis al pasar el texto por la línea de
+     comandos y el borrador llega corrupto a Telegram ("Qu� empresas", emojis como "??").
+     Se escribe el JSON en un archivo y se manda con `--data-binary @archivo` y
+     `Content-Type: application/json; charset=utf-8`. El header va después de la URL para
+     que el patrón de permiso `curl -X POST https://kiraautomate.com/webhook*` siga
+     matcheando.
 8. **Aprobación en Telegram**: botones Publicar/Descartar o edición escribiendo en el chat.
    Publicar marca la fila como `publicado`.
 9. **Auditoría**: si algo falla, revisar ejecuciones con el MCP de n8n y reportar el nodo
-   exacto. Nunca editar el workflow sin OK explícito.
+   exacto. Nunca editar el workflow sin OK explícito. Después de cada envío hay que
+   auditar aunque salga `200`: se mira el texto del nodo "Enviar Borrador a Telegram" en
+   `get_workflow_execution` y se confirma que los acentos y los emojis salieron bien. Si
+   salen como "�", el payload se rompió en el shell y hay que reenviarlo desde el
+   archivo.
 
 ## Imagen dark: parámetros del generador
 

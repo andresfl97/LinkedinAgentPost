@@ -93,8 +93,13 @@ de la ejecucion real.
   5. Caja TAKEAWAY con una sola idea de criterio/decision.
 - Sin firma en la imagen: no lleva nombre ni marca lateral. Andres lo pidió así. Si un
   post necesita identidad, se activa con `signature: true` + `author`.
-- El takeaway es opcional (`show_takeaway: false` lo quita y deja pie de fuente con
-  `footer`). Para posts que ya tienen gancho + ejemplo, quitarlo suele retener mejor.
+- El takeaway es opcional, pero SOLO en el layout `concept`: `show_takeaway: false` lo
+  quita y deja pie de fuente con `footer`. En el layout `code` la caja TAKEAWAY se dibuja
+  siempre, porque el generador la pinta sin condicion, asi que un post que no quiere
+  takeaway tiene que ir con `concept`. Para posts que ya tienen gancho + ejemplo,
+  quitarlo suele retener mejor: `concept` con las tarjetas de "lo que esta mal / lo que
+  esta bien", las dos opciones de sintaxis y la grilla real abajo llena el lienzo mejor
+  que `code` con el takeaway.
 - Dos layouts, según el post:
   - `code`: etiqueta, título, panel SQL con la query completa, grilla de resultados y
     takeaway. Para posts donde lo interesante es la query.
