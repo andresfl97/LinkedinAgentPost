@@ -61,8 +61,8 @@ REGLA:
   escribirse si el nodo Telegram de n8n tiene Parse Mode = None. Mientras el parse mode
   siga en Markdown, el guion bajo rompe el envio: escribe la funcion sin guion bajo
   ("la funcion de percentil acumulado") o pide que se corrija el nodo primero.
-- Emojis: 1 por bullet, set sobrio y profesional (🎯 📈 🧮 ⚠️ ✅ 💡 📊 🔍 🧹). Nunca en los
-  hashtags, nunca 3 emojis en la misma linea.
+- Emojis: el cuerpo va en parrafos, no en bullets. Como maximo UN emoji en todo el post y
+  nunca en los hashtags. Si hace falta, va al final de la frase que resume el error.
 - Hashtags al final, en su propia linea: #SQL #DataAnalytics #AnalisisDeDatos (+ #SQLServer
   #BasesDeDatos #DataScience #AnalistaDeDatos).
 
@@ -106,6 +106,10 @@ de la ejecucion real.
   - `concept`: gancho grande, dos tarjetas ("lo que quieres" / "lo que obtienes"), el
     arreglo en SQL y abajo el ejemplo real. Para posts que explican un concepto o un
     error: retiene más que la query sola.
+- En `concept` la grilla tiene que contrastar DOS numeros: la columna que miente con badge
+  `bad` (✗) y la que sale bien con badge `good` (✓). Si en los datos reales las dos dan
+  practicamente el mismo valor, la imagen no comunica nada: se cambia de caso antes de
+  publicar, no se maquilla.
 - Los datos de la grilla salen de ejecutar el query (MCP SQL Server). Si no se ejecuto,
   no se inventa la grilla: se reduce a lo que la nota sustenta.
 - Coherencia obligatoria: el post describe EXACTAMENTE el query que aparece en la imagen.
@@ -129,19 +133,35 @@ de la ejecucion real.
 
 ## Estructura del post (formato aprobado por Andres — ARTE FINAL, usalo SIEMPRE)
 
-1. **Pregunta de negocio que resolvio ESTA consulta (1-2 lineas):** abre con el
-   problema/decision concreta que responde EL query de la foto (ej: "cuantos pedidos
-   caen en cada trimestre", "clientes sin nombre util"). No es un gancho generico de la
-   seccion: es LA pregunta que resuelve exactamente lo que muestra la captura. No frases
-   motivacionales.
-2. **Tips y consejos en bullets con emojis (5 bullets):** el cuerpo del post. Voz
-   primera persona, conversacional, estilo "tip/consejo": lo que hace cada parte del
-   query, el detalle que cuesta, la trampa que evita. Cada bullet un tip corto con un
-   emoji. NO es explicacion de manual ("Con X se calcula... SQL devuelve..."): suena
-   robotico y no despierta curiosidad. Es como se lo contarias a un colega.
+1. **Gancho: el sintoma, en primera persona (1-2 lineas).** Arranca con el momento en que
+   el dato no cuadraba, en voz de alguien que esta mirando el reporte: "Revisaba un
+   reporte y me encontre una columna que no daba lo que deberia". Va con el numero o el
+   sintoma concreto adentro, no antes.
+   - **PROHIBIDO** abrir con pregunta de negocio generica ("Que empresas tienen...",
+     "Como saber si..."): es el formato de manual, no de alguien que encontro el problema.
+   - **PROHIBIDO** abrir con lista de bullets: el cuerpo va en parrafos.
+2. **Cuerpo: 3-4 parrafos cortos (80-150 palabras en total).** Narrativo, no enumerativo.
+   Parrafo 1: que se estaba revisando y que se vio mal. Parrafo 2: por que pasaba, con lo
+   tecnico de la funcion o la sintaxis. Parrafo 3: como se resuelve y cual era la
+   alternativa. Parrafo 4 (opcional): que decision queda habilitada.
+   - Nada de "tips y consejos", nada de 5 bullets con emojis, nada de explicar la funcion
+     como si fuera el manual ("Con X se calcula..."). Se cuenta como se lo contarias a un
+     colega que esta mirando la misma pantalla.
 3. **Cierre nada mas (1-2 lineas):** el impacto concreto que habilita el query. Sin
-   lista, sin moraleja.
+   lista, sin moraleja, sin CTA.
 4. **Hashtags al final:** #SQL #DataAnalytics #AnalisisDeDatos (+ opcionales).
+
+## Caso de uso real (obligatorio)
+
+- Cada post responde UNA decision que alguien tomaria manana en un trabajo. Antes de
+  redactar, el drafter elige de la nota el ejercicio que mas se acerca a esa decision y lo
+  **ejecuta contra la base**: si el caso elegido no produce un contraste visible con los
+  datos reales, se descarta y se prueba otro ejercicio de la misma nota.
+- El criterio para descartar: si la columna "correcta" y la "que miente" dan practicamente
+  el mismo numero en los datos reales, la imagen no comunica nada y ese caso no sirve.
+  Con datos sinteticos hay que verificar el contraste, no asumirlo.
+- El post cuenta una sola historia: el caso que se ejecuto. No se anuncian otros
+  ejercicios de la nota aunque existan.
 
 REGLAS DE VERIFICACION OBLIGATORIAS:
 - Cada dato concreto DEBE existir literalmente en la nota de Obsidian fuente.
