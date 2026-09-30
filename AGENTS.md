@@ -14,9 +14,12 @@ proceso; las reglas de estilo viven en `skills/linkedin-post-style/SKILL.md`.
    y **no se usan modelos de visión** (quedaron descartados).
 3. **La imagen no lleva el nombre de Andres ni la marca.** El texto del post tampoco nombra a
    agentes, IA ni automatización.
-4. **Formato narrativo**: gancho en primera persona con el síntoma concreto (1-2 líneas),
-   cuerpo en 3-4 párrafos cortos (80-150 palabras), cierre de 1-2 líneas y hashtags al
-   final. Nada de 5 bullets: ese formato quedó atrás, es el de manual.
+4. **Formato narrativo**: gancho en primera persona con el problema o la consecuencia
+   concreta (1-2 líneas, nunca la definición del tema), cuerpo en 3-5 párrafos cortos
+   (100-160 palabras) contando el antes/después en prosa, cierre de 1-2 líneas que
+   responde **por qué** el analista usa la técnica, hashtags al final. Nada de 5 bullets:
+   ese formato quedó atrás, es el de manual. Antes de enviar se pasa el checklist
+   anti-IA de la skill.
 5. **La imagen se sube a GitHub antes de enviar el borrador.** El `imageUrl` es una URL
    `raw.githubusercontent.com`; sin push, n8n da 404 y no publica.
 6. **El webhook es el único disparador.** Insertar filas en la data table no ejecuta el

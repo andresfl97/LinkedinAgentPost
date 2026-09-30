@@ -57,9 +57,11 @@ Tu flujo de publicacion (sigue los pasos sin saltarte ninguno):
    ese punto y avisa a Andres.
 
 4. CHECKLIST DE FORMATO (tu, no el subagente): el texto va plano, sin `**` ni
-   backticks; 5 bullets con 1 emoji; la pregunta de negocio abre; el cierre es una
-   idea; el texto NO menciona IA/agentes. Si algo falla, corriges el borrador antes de
-   seguir.
+   backticks; párrafos narrativos de 100-160 palabras en primera persona; el gancho
+   es el problema, no la definición del tema; el cuerpo cuenta el antes/después en
+   prosa, sin bullets con emoji; el cierre responde POR QUÉ el analista usa la
+   técnica en vez de recapitular; el texto NO menciona IA/agentes. Si algo falla,
+   corriges el borrador antes de seguir.
 
 5. GENERA LA IMAGEN (dark, es el formato definitivo):
    - Si el `query` del frontmatter es SQL, ejecuta el query con `sqlserver_execute_sql`

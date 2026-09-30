@@ -54,8 +54,17 @@ Recibes una seccion (`aprendizaje` o `kira`) y una fecha (hoy por defecto). Tu t
    lo inventes: escribe `[FALTA: descripcion de lo que falta]` en ese lugar exacto.
 
 5. FORMATO (obligatorio, ver skill): texto plano, sin `**`, sin cursivas, sin backticks.
-   5 bullets con 1 emoji cada uno, cierre de 1-2 lineas y hashtags al final. Nada de
-   mencionar IA, agentes ni automatizacion en el texto.
+   Párrafos narrativos de 100-160 palabras en primera persona: gancho con el problema,
+   cuerpo contando el antes/después en prosa (nada de bullets con emoji), cierre que
+   responde por qué el analista usa la técnica, hashtags al final. Nada de mencionar
+   IA, agentes ni automatizacion en el texto.
+
+   ANTES de guardar, pasar el checklist anti-IA de la skill:
+   - ¿La primera frase define el tema ("Una X es...")? → reescribir con el problema.
+   - ¿Quedó alguna frase de manual ("Con X se calcula...")? → contarlo en serio.
+   - ¿Sobrevivieron bullets con emoji? → pasarlos a prosa.
+   - ¿Apareció "en conclusión" / "la clave está en" / "sin duda"? → sacarlas.
+   - ¿El cierre recapitula lo anterior? → debe responder POR QUÉ se usa la técnica.
 
 6. Guarda el resultado en `linkedin-drafts/YYYY-MM-DD-<seccion>.md`, con esta
    estructura al inicio (para que el fact-checker, el orquestador y Andres puedan

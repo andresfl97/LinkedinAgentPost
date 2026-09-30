@@ -139,10 +139,28 @@ de la ejecucion real.
   - `concept`: gancho grande, dos tarjetas ("lo que quieres" / "lo que obtienes"), el
     arreglo en SQL y abajo el ejemplo real. Para posts que explican un concepto o un
     error: retiene más que la query sola.
+- En `concept`, el titulo puede ser el nombre del tema ("Subqueries", "CTE") o la
+  pregunta de negocio que responde la tecnica ("Por que un analista de datos usa
+  Views"). La pregunta de negocio retiene mas cuando el post explica PARA QUE se usa
+  algo.
+- En `concept` hay tres bloques extra, todos opcionales y combinables:
+  - `subtitle` (+ `subtitle_size`): una frase de escenario en lenguaje llano, dibujada
+    entre el titulo y los bloques. Sirve para que alguien que no conoce la base
+    entienda de que se trata sin leer el post.
+  - `stat` (`value`, `size`, `tone`, `caption`): un numero gigante con su frase. Es el
+    gancho visual del post. El `tone` va segun el mensaje: `red` cuando el numero
+    denuncia un error, `green` cuando es el resultado bueno, `amber`/`blue` si es
+    neutro.
+  - `fix` por bloques: cada uno acepta `tone` (`red` = la version que falla, `green` =
+    la que funciona; sin `tone` sale verde). Cuando el post es un antes/despues, el
+    "antes" va en `red` y el "despues" en `green`, si no el contraste se pierde.
 - En `concept` la grilla tiene que contrastar DOS numeros: la columna que miente con badge
   `bad` (✗) y la que sale bien con badge `good` (✓). Si en los datos reales las dos dan
   practicamente el mismo valor, la imagen no comunica nada: se cambia de caso antes de
   publicar, no se maquilla.
+- La grilla se recorta sola contra el borde inferior, asi que si solo entran 2 de 5
+  filas el problema son las tarjetas de codigo de arriba, no la grilla: se recortan
+  lineas de codigo hasta que las filas que importan entren completas.
 - Los datos de la grilla salen de ejecutar el query (MCP SQL Server). Si no se ejecuto,
   no se inventa la grilla: se reduce a lo que la nota sustenta.
 - Coherencia obligatoria: el post describe EXACTAMENTE el query que aparece en la imagen.
