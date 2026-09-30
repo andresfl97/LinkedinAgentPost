@@ -128,6 +128,24 @@ def draw_cards(d, cfg, margin, content_w, y):
     return y + ch
 
 
+def draw_stat(d, cfg, margin, content_w, y):
+    stat = cfg.get("stat")
+    if not stat:
+        return y
+    tones = {"red": RED, "green": GREEN, "amber": AMBER, "blue": BLUE}
+    tone = tones.get(stat.get("tone", "red"), RED)
+    val_f = font(SANS_B, stat.get("size", 76))
+    cap_f = font(SANS, stat.get("caption_size", 25))
+    caps = wrap(d, stat["caption"], cap_f, content_w - 60)[:2]
+    h = 22 + int(stat.get("size", 76) * 1.15) + 12 + 32 * len(caps) + 22
+    rounded(d, [margin, y, margin + content_w, y + h], 14, PANEL, BORDER, 2)
+    d.rectangle([margin, y, margin + 5, y + h], fill=tone)
+    d.text((margin + 28, y + 18), stat["value"], font=val_f, fill=tone)
+    for j, line in enumerate(caps):
+        d.text((margin + 28, y + int(stat.get("size", 76) * 1.15) + 30 + j * 32), line, font=cap_f, fill=TEXT)
+    return y + h
+
+
 def draw_fix(d, cfg, margin, content_w, y):
     fix = cfg.get("fix")
     if not fix:
@@ -263,6 +281,8 @@ def build(cfg):
                 d.text((margin, y), line, font=sub_f, fill=MUTED)
                 y += int(cfg.get("subtitle_size", 30) * 1.35)
             y += 22
+        if cfg.get("stat"):
+            y = draw_stat(d, cfg, margin, content_w, y) + 24
         y = draw_cards(d, cfg, margin, content_w, y) + 24
         y = draw_fix(d, cfg, margin, content_w, y) + 24
         if cfg.get("example_label"):
