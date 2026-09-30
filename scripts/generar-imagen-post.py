@@ -257,6 +257,12 @@ def build(cfg):
         y += 8
         d.line([(margin, y), (margin + 72, y)], fill=GREEN, width=5)
         y += 30
+        if cfg.get("subtitle"):
+            sub_f = font(SANS, cfg.get("subtitle_size", 30))
+            for line in wrap(d, cfg["subtitle"], sub_f, content_w)[:3]:
+                d.text((margin, y), line, font=sub_f, fill=MUTED)
+                y += int(cfg.get("subtitle_size", 30) * 1.35)
+            y += 22
         y = draw_cards(d, cfg, margin, content_w, y) + 24
         y = draw_fix(d, cfg, margin, content_w, y) + 24
         if cfg.get("example_label"):
