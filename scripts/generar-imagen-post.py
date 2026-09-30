@@ -158,10 +158,12 @@ def draw_fix(d, cfg, margin, content_w, y):
     h = 0
     for b in blocks:
         h = max(h, 52 + lh * len(b["code"]) + 14)
+    tones = {"green": GREEN, "red": RED, "amber": AMBER, "blue": BLUE, "grey": MUTED}
     for i, b in enumerate(blocks):
         x = margin + i * (bw + gap)
-        rounded(d, [x, y, x + bw, y + h], 12, PANEL_ALT, GREEN, 2)
-        d.text((x + 22, y + 14), b.get("label", "fix").upper(), font=font(MONO_B, 17), fill=GREEN)
+        tone = tones.get(b.get("tone", "green"), GREEN)
+        rounded(d, [x, y, x + bw, y + h], 12, PANEL_ALT, tone, 2)
+        d.text((x + 22, y + 14), b.get("label", "fix").upper(), font=font(MONO_B, 17), fill=tone)
         for j, line in enumerate(b["code"]):
             d.text((x + 22, y + 52 + j * lh), line, font=f, fill=TEXT)
     return y + h

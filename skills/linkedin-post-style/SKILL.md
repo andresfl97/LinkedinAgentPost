@@ -29,25 +29,58 @@ secciones en un mismo post.
 
 TONO:
 - Profesional, directo y seguro, sin adornos corporativos.
-- Presento el caso de negocio y la respuesta, no el proceso de aprendizaje.
-- Voz de quien ensena: el foco esta en lo que el dato habilita para el negocio.
-- Uso causa-efecto natural: "porque X, entonces Y".
+- Habla de un problema que el mismoiendas, en primera persona, y despues de como lo
+  resolvedo. No es el manual del tema: es el relato de un analista frente a una pantalla.
+- Conecta ideas con "pero", "porque", "y ahi" y "me saco de encima". Nada de
+  "en el mundo de", "en la era de", "no es solo X, es Y".
+- Como mucho 120-160 palabras. Si pasa de ahi, se recorta: el lector se va.
 
 VOCABULARIO:
-- Frases cortas que van al punto.
-- Conecto ideas con "pero", "porque" y "y ahi".
-- Evito sustantivos vacios: "sinergia", "proactividad", "orientado a resultados".
+- Frases cortas que van al punto, y parrafos de largo disparejo (no todos igual).
+- Palabras de todos los dias: "join", "reporte", "dashboard", "copiar", "pegar".
+  No "constructor de consulta", "capa de abstraccion", "semantica de negocio".
+- Evita sustantivos vacios: "sinergia", "proactividad", "orientado a resultados",
+  "solida base", "en conclusion".
 
 ENFASIS:
 - El dato correcto para la decision de negocio correcta.
 - Doy contexto de negocio, no de esfuerzo personal.
+- Si algo no lo diria en una conversacion con un colega, no va.
 
 REGLA:
 - Si suena a LinkedIn o a ChatGPT por defecto, se rehace.
-- Si Andres no lo diria en una conversacion, no va.
-- Algunas formulas que SI le gustan como recurso (usar con criterio, no en todos los posts):
-  analogias con cosas cotidianas (conjuntos/Venn), estructura de lista corta con "->",
-  emojis moderados.
+- El parrafo NO tiene que cerrar con una frase-redondeada tipo "la clave esta en...".
+  A veces el cierre es un hecho seco, y eso esta bien.
+- Frases prohibidas por sonar a IA: "en Conclusion", "sin duda", "cabe destacar",
+  "lo que nos lleva a", "no se trata solo de", "en el mundo actual",
+  "jugar un papel fundamental", "potenciar", "aprovechar al maximo".
+
+EJEMPLO DE REFERENCIA (tono aprobado por Andres, Seccion 18 — Views):
+> Queria que el reporte de ventas no dependiera de mi.
+>
+> El dashboard pedia la misma consulta una y otra vez: unir suscripciones con empresa,
+> empresa con plan, para saber que plan tenia cada cliente activo. La logica era siempre
+> la misma, pero si cambiaba algo, tenia que corregirlo en cada reporte, en cada query, en
+> cada lugar donde la hubiera copiado.
+>
+> La view me saco eso de encima.
+>
+> Guarde la consulta una sola vez en la base. Ahora cada vez que necesito saber que plan
+> tiene cada cliente, llamo la vista y el motor ya sabe que unir. 3 tablas juntadas, 600
+> filas listas, sin copiar el join nunca mas.
+>
+> Lo mejor: Power BI se conecta a la vista, no a las tablas sueltas. Si manana cambia la
+> regla de negocio, se corrige en un solo lugar y todos los reportes la reciben.
+>
+> Por eso un analista usa views: para que la logica viva en un solo lugar, no en diez.
+
+Que hace que ese texto funcione (replicar siempre):
+- Arranca con una consecuencia humana ("no dependiera de mi"), no con la definicion del tema.
+- Nombra lo que se repetia (la misma consulta, los mismos joins) con palabras comunes.
+- El "antes" y el "despues" aparecen en prosa, sin bullets ni emojis.
+- El dato concreto entra natural: "3 tablas juntadas, 600 filas listas".
+- El cierre responde POR QUE el analista lo usa, no recapitula lo que dijo.
+- Cero emojis en este post. Cero "en Conclusion". Cero "la clave esta en".
 
 ## FORMATO DEL TEXTO (estandar definitivo, NO negociable)
 
@@ -133,23 +166,33 @@ de la ejecucion real.
 
 ## Estructura del post (formato aprobado por Andres — ARTE FINAL, usalo SIEMPRE)
 
-1. **Gancho: el sintoma, en primera persona (1-2 lineas).** Arranca con el momento en que
-   el dato no cuadraba, en voz de alguien que esta mirando el reporte: "Revisaba un
-   reporte y me encontre una columna que no daba lo que deberia". Va con el numero o el
-   sintoma concreto adentro, no antes.
-   - **PROHIBIDO** abrir con pregunta de negocio generica ("Que empresas tienen...",
-     "Como saber si..."): es el formato de manual, no de alguien que encontro el problema.
+1. **Gancho: el problema, en primera persona (1-2 lineas).** Arranca con la consecuencia
+   concreta que le pasaba o con lo que se estaba pidiendo, en voz de alguien mirando su
+   pantalla: "Queria que el reporte no dependiera de mi", "Revisaba un reporte y me
+   encontre una columna que no daba lo que deberia".
+   - El sintoma o el objetivo va adentro del gancho, con el numero cuando lo hay.
+   - **PROHIBIDO** abrir con definicion del tema ("Una view es una consulta guardada..."):
+     eso es manual, no relato.
    - **PROHIBIDO** abrir con lista de bullets: el cuerpo va en parrafos.
-2. **Cuerpo: 3-4 parrafos cortos (80-150 palabras en total).** Narrativo, no enumerativo.
-   Parrafo 1: que se estaba revisando y que se vio mal. Parrafo 2: por que pasaba, con lo
-   tecnico de la funcion o la sintaxis. Parrafo 3: como se resuelve y cual era la
-   alternativa. Parrafo 4 (opcional): que decision queda habilitada.
+2. **Cuerpo: 3-5 parrafos cortos (100-160 palabras en total).** Narrativo.
+   - Parrafo 1: que se estaba pidiendo o revisando, y por que era un problema.
+   - Parrafo 2-3: por que pasaba / que se hacia antes, con lo tecnico de la funcion o la
+     sintaxis, dicho como se lo contarias a un colega.
+   - Parrafo 4: como quedo resuelto, con el dato concreto.
+   - Parrafo 5 (opcional): el impacto o lo que habilita en el negocio.
+   - El "antes/despues" va en prosa, con las palabras "antes" y "despues" o "la version
+     que no funcionaba" / "como quedo". Sin bullets, sin flechas, sin emojis por fila.
    - Nada de "tips y consejos", nada de 5 bullets con emojis, nada de explicar la funcion
      como si fuera el manual ("Con X se calcula..."). Se cuenta como se lo contarias a un
      colega que esta mirando la misma pantalla.
-3. **Cierre nada mas (1-2 lineas):** el impacto concreto que habilita el query. Sin
-   lista, sin moraleja, sin CTA.
+3. **Cierre nada mas (1-2 lineas):** el impacto concreto que habilita el query. Responde
+   por que el analista lo usa o que decision ahora puede tomar. Sin lista, sin moraleja,
+   sin CTA, sin "aprendiendo en publico", sin "en Conclusion".
 4. **Hashtags al final:** #SQL #DataAnalytics #AnalisisDeDatos (+ opcionales).
+
+REGLA DE ORO DEL CIERRE: una sola idea, en voz de Andres, que cierre el para que existe
+la tecnica ("Por eso un analista usa views: para que la logica viva en un solo lugar").
+No es un resumen de lo anterior, es el motivo por el que se usa.
 
 ## Caso de uso real (obligatorio)
 
@@ -193,7 +236,27 @@ REGLAS DE VERIFICACION OBLIGATORIAS:
 - Directo, en primera persona, sin jerga de marketing.
 - Profesional que domina el tema: explica el criterio tecnico con contexto de negocio,
   no como un repaso de apuntes ni como un tuto de cero.
-- Longitud objetivo: 80-150 palabras. Nada de post-ensayo.
+- Longitud objetivo: 100-160 palabras. Nada de post-ensayo.
+
+## Checklist anti-IA (passar antes de enviar, obligatorio)
+
+Antes de mandar el borrador, revisar estas seis cosas. Si alguna falla, se reescribe:
+
+1. **¿Arranca definicion?** La primera frase no puede ser "X es una..." ni "Una X es...".
+   Arranca con lo que le pasaba a Andres o lo que se pedia.
+2. **¿Hay frase de manual?** "Con X se calcula...", "X permite...", "esta funcion sirve
+   para...". Si aparece, hay que contarlo como sencimiento, no como definicion.
+3. **¿Los bullets siguen vivos?** El cuerpo va en parrafos. Si todavia hay listas con
+   emoji, se convierte a prosa.
+4. **¿Rondea la conclusion?** "En Conclusion", "sin duda", "la clave esta en", "lo que
+   nos lleva a", "no se trata solo de". Ninguna puede quedar.
+5. **¿El cierre recapitula?** El cierre NO resume lo anterior: responde por que el
+   analista usa la tecnica o que decision habilita.
+6. **¿Suena humano?** Leerlo en voz alta. Si suena a texto de manual o a ChatGPT, se
+   reescribe. Si Andres no lo diria asi en una conversacion con un colega, no va.
+
+Y el criterio de Andres, textual: "tu forma de hablar es asquerosa, no tiene coherencia,
+le falta humanidad, se nota que es IA". Ese es el filtro.
 
 ## Regla anti-copycat (siempre)
 
