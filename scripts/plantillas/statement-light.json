@@ -1,0 +1,10 @@
+{
+  "style": "statement",
+  "theme": "light",
+  "accent": "#0071E3",
+  "kicker": "Errores comunes de SQL",
+  "headline": "NULL no es cero.",
+  "sub": "Si filtras por una columna vacía con el signo igual, no te trae nada.",
+  "footer_left": "SQL",
+  "footer_right": "01"
+}

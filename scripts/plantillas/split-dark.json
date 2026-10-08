@@ -1,0 +1,13 @@
+{
+  "style": "split",
+  "theme": "dark",
+  "accent": "#2997FF",
+  "kicker": "Errores comunes de SQL",
+  "headline": "Lo que no pides, no lo tienes",
+  "cols": [
+    {"label": "Lo que asumes", "big": "Ordenado", "text": "Crees que las filas vienen en orden porque así las ves, hasta que la tabla crece y cambian."},
+    {"label": "Lo que pides", "big": "ORDER BY", "text": "Dices explícitamente cómo ordenar, y eso sí está garantizado."}
+  ],
+  "footer_left": "SQL",
+  "footer_right": "03"
+}

@@ -1,0 +1,10 @@
+{
+  "style": "statement",
+  "theme": "dark",
+  "accent": "#2997FF",
+  "kicker": "Errores comunes de SQL",
+  "headline": "Sin ORDER BY, no hay orden.",
+  "sub": "La base te devuelve las filas como quiere, no como esperas.",
+  "footer_left": "SQL",
+  "footer_right": "02"
+}
